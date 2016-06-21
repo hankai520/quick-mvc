@@ -1,0 +1,31 @@
+# eclipse generated files
+.apt_generated
+.classpath
+.factorypath
+.gradle
+.project
+.settings
+bin
+build
+.springBeans
+
+build.gradle
+
+# app generated files
+home
+home-not-set
+test-logs
+
+# common generated files
+.DS_Store
+*.java.hsp
+*.sonarj
+*.sw*
+ivy-cache
+*.log
+
+# IDEA artifacts and output dirs
+*.iml
+*.ipr
+*.iws
+.idea

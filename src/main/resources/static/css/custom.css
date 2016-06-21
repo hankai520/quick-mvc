@@ -1,0 +1,44 @@
+.sidebar .attribution {
+	background-color: #fff;
+}
+
+.breadcrumb {
+	margin-bottom: 10px;
+}
+
+#contentContainer {
+	padding-bottom: 10px;
+}
+
+.progress {
+	display: none;
+}
+
+.progress-animated .bar {
+	height: 100%;
+	background: url("../image/progressbar.gif") !important;
+}
+
+.fg-red {
+	color: #c5622f !important;
+}
+
+.fg-green {
+	color: #098203 !important;
+}
+
+.field-error {
+	color: #e0301e;
+	font-size: 13px;
+	margin-left: 4px;
+}
+
+.switch-indicator {
+	display: none;
+}
+
+.logo-thumbnail {
+	width: 40px;
+	height: 40px;
+	border-radius: 4px;
+}

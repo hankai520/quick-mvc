@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <appender name="app-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${HOME_DIR}/logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${HOME_DIR}/logs/app.log.%d{yyyy-MM-dd}.zip
+            </fileNamePattern>
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.my.app">
+        <appender-ref ref="app-file" />
+    </logger>
+</configuration>
