@@ -9,8 +9,6 @@ bin
 build
 .springBeans
 
-build.gradle
-
 # app generated files
 home
 home-not-set
