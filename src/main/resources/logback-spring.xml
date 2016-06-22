@@ -2,9 +2,9 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <appender name="app-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${HOME_DIR}/logs/app.log</file>
+        <file>${HOME_DIR}/logs/app.txt</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${HOME_DIR}/logs/app.log.%d{yyyy-MM-dd}.zip
+            <fileNamePattern>${HOME_DIR}/logs/app.txt.%d{yyyy-MM-dd}.zip
             </fileNamePattern>
             <maxHistory>2</maxHistory>
         </rollingPolicy>

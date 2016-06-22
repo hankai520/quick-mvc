@@ -11,8 +11,8 @@ build
 
 # app generated files
 home
+test-home
 home-not-set
-test-logs
 
 # common generated files
 .DS_Store

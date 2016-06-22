@@ -34,13 +34,11 @@ public class H2InMemoryConfig extends JpaDbConfig {
     @Override
     @Bean
     protected DataSource getDataSource() {
-        super.loadExternalConfig( "h2.properties" );
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName( driverClassName );
-        String dbPath = Preferences.getDataDir() + "/database";
-        ds.setUrl( String.format( databaseUrl, dbPath ) );
-        ds.setUsername( userName );
-        ds.setPassword( password );
+        ds.setDriverClassName( "org.h2.Driver" );
+        ds.setUrl( "jdbc:h2:mem:ut-db;DB_CLOSE_DELAY=-1" );
+        ds.setUsername( "sa" );
+        ds.setPassword( null );
         return ds;
     }
 
