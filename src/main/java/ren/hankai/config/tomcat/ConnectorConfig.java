@@ -21,6 +21,8 @@ public class ConnectorConfig implements TomcatConnectorCustomizer {
     private String  proxyName;
     @Value( "${proxy.port}" )
     private Integer proxyPort;
+    @Value( "${proxy.scheme}" )
+    private String  proxyScheme;
 
     /*
      * 用于自定义 tomcat connector 配置。默认提供 proxy 配置，这将用于将 tomcat 作为反向代理架构下
@@ -31,11 +33,12 @@ public class ConnectorConfig implements TomcatConnectorCustomizer {
      */
     @Override
     public void customize( Connector connector ) {
-        if ( !StringUtils.isEmpty( proxyName ) && ( proxyPort != null ) && ( proxyPort > 0 ) ) {
+        if ( !StringUtils.isEmpty( proxyScheme ) && !StringUtils.isEmpty( proxyName )
+            && ( proxyPort != null ) && ( proxyPort > 0 ) ) {
             connector.setProxyName( proxyName );
             connector.setProxyPort( proxyPort );
             connector.setRedirectPort( proxyPort );
-            connector.setScheme( "https" );
+            connector.setScheme( proxyScheme );
         }
     }
 }
