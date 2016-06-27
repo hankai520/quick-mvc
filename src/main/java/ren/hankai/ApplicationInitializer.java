@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ren.hankai.config.SystemConfig;
+
 /**
  * 程序初始化类，用于自检，修复错误，初始化依赖项等。
  *
@@ -27,6 +29,7 @@ public class ApplicationInitializer {
         "h2.properties",
         "mysql.properties",
         "oracle.properties",
+        "system.yml"
     };
 
     /**
@@ -42,6 +45,9 @@ public class ApplicationInitializer {
         success = checkHome();
         if ( success ) {
             success = checkConfigurations();
+            if ( success ) {
+                SystemConfig.loadParameters();
+            }
         }
         if ( success ) {
             success = checkDatabase();

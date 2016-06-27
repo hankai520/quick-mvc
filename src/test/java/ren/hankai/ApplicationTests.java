@@ -37,10 +37,13 @@ public abstract class ApplicationTests {
     protected JpaServiceUtil        jpaServiceUtil;
     @Autowired
     protected ObjectMapper          objectMapper;
+    static {
+        ApplicationInitializer.initialize();
+    }
 
     /**
      * 初始化 spring mvc 测试环境，清空数据库记录。
-     * 
+     *
      * @author hankai
      * @since Jun 21, 2016 1:35:39 PM
      */

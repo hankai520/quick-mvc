@@ -4,7 +4,6 @@ buildscript {
     }
     repositories {
         mavenCentral()
-        maven { url "http://192.168.1.15/content/groups/public" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
@@ -36,7 +35,6 @@ targetCompatibility = 1.7
 
 repositories {
     mavenCentral()
-    maven { url "http://192.168.1.15/content/groups/public" }
 }
 
 configurations {
@@ -58,7 +56,8 @@ dependencies {
     compile("org.apache.httpcomponents:httpclient:4.5")
     runtime("com.h2database:h2")
     runtime("mysql:mysql-connector-java")
-    runtime("oracle:ojdbc6:11.2.0.3")
+    runtime files("libs/ojdbc6.jar")
+
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     providedRuntime("org.apache.tomcat.embed:tomcat-embed-jasper")
     testCompile("org.springframework.boot:spring-boot-starter-test")
