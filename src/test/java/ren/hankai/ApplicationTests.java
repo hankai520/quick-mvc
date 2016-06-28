@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ren.hankai.persist.util.JpaServiceUtil;
+import ren.hankai.web.interceptor.ApiRequestInterceptor;
 
 /**
  * 基于 Spring boot 的单元测试基类，需要测试 spring mvc，只需要继承此类即可。
@@ -37,6 +38,8 @@ public abstract class ApplicationTests {
     protected JpaServiceUtil        jpaServiceUtil;
     @Autowired
     protected ObjectMapper          objectMapper;
+    @Autowired
+    protected ApiRequestInterceptor apiRequestInterceptor;
     static {
         ApplicationInitializer.initialize();
     }

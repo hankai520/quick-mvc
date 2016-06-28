@@ -27,7 +27,15 @@ public enum ApiCode {
     /**
      * 未知错误
      */
-    UnknownError( 4 );
+    UnknownError( 4 ),
+    /**
+     * 需要登录授权
+     */
+    AuthorizationRequired( 5 ),
+    /**
+     * 签名错误
+     */
+    BadSignature( 6 ),;
 
     @JsonCreator
     public static ApiCode fromInteger( Integer value ) {
@@ -37,6 +45,10 @@ public enum ApiCode {
             return BadParams;
         } else if ( value == UnknownError.value ) {
             return UnknownError;
+        } else if ( value == AuthorizationRequired.value ) {
+            return AuthorizationRequired;
+        } else if ( value == BadSignature.value ) {
+            return BadSignature;
         }
         return null;
     }

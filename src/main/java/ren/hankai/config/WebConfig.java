@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ren.hankai.web.interceptor.AdministrationInterceptor;
+import ren.hankai.web.interceptor.ApiRequestInterceptor;
+import ren.hankai.web.interceptor.ApiSecurityInterceptor;
 
 /**
  * Spring Web 相关配置
@@ -69,6 +71,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
      * 用于在页面渲染前传递页面级错误
      */
     public static final String           WEB_PAGE_ERROR       = "pageError";
+    /**
+     * API 访问鉴权码
+     */
+    public static final String           API_ACCESS_TOKEN     = "access_token";
 
     @Override
     public void addFormatters( FormatterRegistry registry ) {
@@ -93,12 +99,21 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
     private AdministrationInterceptor adminInterceptor;
+    @Autowired
+    private ApiRequestInterceptor     apiRequestInterceptor;
+    @Autowired
+    private ApiSecurityInterceptor    apiSecurityInterceptor;
 
     @Override
     public void addInterceptors( InterceptorRegistry registry ) {
         registry.addInterceptor( adminInterceptor )
             .addPathPatterns( "/admin/**" )
             .excludePathPatterns( "/admin/login" );
+        registry.addInterceptor( apiRequestInterceptor )
+            .addPathPatterns( "/api/**" );
+        registry.addInterceptor( apiSecurityInterceptor )
+            .addPathPatterns( "/api/**" )
+            .excludePathPatterns( "/api/login" );
     }
 
     @Bean
