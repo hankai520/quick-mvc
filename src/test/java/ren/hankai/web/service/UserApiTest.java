@@ -40,7 +40,7 @@ import ren.hankai.web.payload.ApiTokenInfo;
  * @version 1.0.0
  * @since Jun 21, 2016 1:33:00 PM
  */
-public class SampleApiTest extends ApplicationTests {
+public class UserApiTest extends ApplicationTests {
 
     @SuppressWarnings( "unchecked" )
     @Test
@@ -60,6 +60,7 @@ public class SampleApiTest extends ApplicationTests {
                 .param( "device_token", params.get( "device_token" ) ) )
             .andExpect( status().isOk() )
             .andExpect( jsonPath( "$.code", is( ApiCode.Success.value() ) ) )
+            .andExpect( jsonPath( "$.body.success", is( true ) ) )
             .andExpect( jsonPath( "$.body.data", notNullValue() ) )
             .andDo( print() )
             .andReturn();
@@ -90,6 +91,7 @@ public class SampleApiTest extends ApplicationTests {
                 .param( "bbb", params.get( "bbb" ) ) )
             .andExpect( status().isOk() )
             .andExpect( jsonPath( "$.code", is( ApiCode.Success.value() ) ) )
+            .andExpect( jsonPath( "$.body.success", is( true ) ) )
             .andExpect( jsonPath( "$.body.data", notNullValue() ) )
             .andDo( print() )
             .andReturn();

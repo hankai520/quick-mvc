@@ -15,16 +15,16 @@ import ren.hankai.web.payload.ApiCode;
 import ren.hankai.web.payload.ApiResponse;
 
 /**
- * 示例 API（即 web-service）
+ * 用户接口
  *
  * @author hankai
  * @version 1.0
  * @since Mar 15, 2016 2:17:24 PM
  */
 @Controller
-public class SampleApi {
+public class UserApi {
 
-    private static final Logger logger = LoggerFactory.getLogger( SampleApi.class );
+    private static final Logger logger = LoggerFactory.getLogger( UserApi.class );
 
     @RequestMapping( Route.API_LOGIN )
     @ResponseBody
@@ -38,6 +38,7 @@ public class SampleApi {
             data.put( "part1", "hello1" );
             data.put( "part2", "hello2" );
             response.getBody().setData( data );
+            response.getBody().setSuccess( true );
             response.setCode( ApiCode.Success );
         } catch (Exception e) {
             logger.warn( Route.API_LOGIN, e );
@@ -55,6 +56,7 @@ public class SampleApi {
         ApiResponse response = new ApiResponse();
         try {
             response.getBody().setData( aaa + bbb );
+            response.getBody().setSuccess( true );
             response.setCode( ApiCode.Success );
         } catch (Exception e) {
             logger.warn( "/api/sample", e );

@@ -3,6 +3,8 @@ package ren.hankai.web.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -31,24 +33,70 @@ import ren.hankai.web.payload.ApiTokenInfo;
 @Component
 public class ApiSecurityInterceptor implements HandlerInterceptor {
 
+    private static final Logger logger = LoggerFactory.getLogger( ApiSecurityInterceptor.class );
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper        objectMapper;
+
+    /**
+     * 生成 API 鉴权码
+     *
+     * @param ati 鉴权信息
+     * @return
+     * @author hankai
+     * @since Jun 29, 2016 9:13:55 PM
+     */
+    public String generateToken( ApiTokenInfo ati ) {
+        try {
+            String token = objectMapper.writeValueAsString( ati );
+            token = EncryptionUtil.aes( token, SystemConfig.getSystemSk(), true );
+            return token;
+        } catch (Exception e) {
+            logger.error( "Failed to generate api access token!", e );
+        }
+        return null;
+    }
+
+    /**
+     * 验证API鉴权码
+     *
+     * @param rawToken 鉴权码密文字串
+     * @return 是否有效
+     * @author hankai
+     * @since Jun 29, 2016 9:17:15 PM
+     */
+    public boolean verifyToken( String rawToken, HttpServletResponse response ) {
+        if ( StringUtils.isEmpty( rawToken ) ) {
+            return false;
+        }
+        String decrypted = EncryptionUtil.aes( rawToken, SystemConfig.getSystemSk(), false );
+        ApiTokenInfo tokenInfo = null;
+        try {
+            tokenInfo = objectMapper.readValue( decrypted, ApiTokenInfo.class );
+        } catch (Exception e) {
+            logger.error( String.format( "Failed to parse token: \"%s\"", rawToken ), e );
+        }
+        if ( tokenInfo == null ) {
+            return false;
+        } else if ( tokenInfo.getExpiryTime().before( new Date() ) ) {
+            ApiResponse ar = new ApiResponse();
+            ar.setCode( ApiCode.AuthorizationRequired );
+            ar.setMessage( "Access token was expired!" );
+            try {
+                objectMapper.writeValue( response.getOutputStream(), ar );
+            } catch (Exception e) {
+                logger.error( "Failed to send access token error info!", e );
+            }
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public boolean preHandle( HttpServletRequest request, HttpServletResponse response,
                     Object handler ) throws Exception {
         String token = request.getParameter( WebConfig.API_ACCESS_TOKEN );
-        if ( !StringUtils.isEmpty( token ) ) {
-            String rawToken = EncryptionUtil.aes( token, SystemConfig.getSystemSk(), false );
-            ApiTokenInfo tokenInfo = objectMapper.readValue( rawToken, ApiTokenInfo.class );
-            if ( tokenInfo.getExpiryTime().before( new Date() ) ) {
-                ApiResponse ar = new ApiResponse();
-                ar.setCode( ApiCode.AuthorizationRequired );
-                ar.setMessage( "Access token was expired!" );
-                objectMapper.writeValue( response.getOutputStream(), ar );
-            } else {
-                return true;
-            }
+        if ( verifyToken( token, response ) ) {
+            return true;
         }
         return false;
     }

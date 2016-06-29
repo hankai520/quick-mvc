@@ -71,7 +71,7 @@ public class ApiRequestInterceptor implements HandlerInterceptor {
             toBeSigned.deleteCharAt( toBeSigned.length() - 1 );
         }
         toBeSigned.append( SystemConfig.getTransferKey() );
-        String expSign = DigestUtils.md5Hex( toBeSigned.toString() );
+        String expSign = DigestUtils.sha1Hex( toBeSigned.toString() );
         return expSign;
     }
 
@@ -83,7 +83,7 @@ public class ApiRequestInterceptor implements HandlerInterceptor {
      * @author hankai
      * @since Jun 28, 2016 2:28:00 PM
      */
-    private boolean verifyParameters( HttpServletRequest request ) {
+    public boolean verifyParameters( HttpServletRequest request ) {
         String expSign = generateSign( request.getParameterMap() );
         String sign = request.getParameter( "sign" );
         if ( expSign.equalsIgnoreCase( sign ) ) {
