@@ -25,7 +25,7 @@ import ren.hankai.Preferences;
 @Configuration
 public class H2Config extends JpaDbConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger( H2InMemoryConfig.class );
+    private static final Logger logger = LoggerFactory.getLogger( H2Config.class );
     static {
         DB_PLATFORM = H2Platform.class.getName();
         ENTITY_BASE_PACKAGE = new String[] { "ren.hankai" };

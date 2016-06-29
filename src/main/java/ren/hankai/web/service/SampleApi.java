@@ -13,7 +13,6 @@ import java.util.HashMap;
 import ren.hankai.config.Route;
 import ren.hankai.web.payload.ApiCode;
 import ren.hankai.web.payload.ApiResponse;
-import ren.hankai.web.payload.BusinessError;
 
 /**
  * 示例 API（即 web-service）
@@ -40,11 +39,27 @@ public class SampleApi {
             data.put( "part2", "hello2" );
             response.getBody().setData( data );
             response.setCode( ApiCode.Success );
-            response.getBody().setError( BusinessError.InvalidAccount );
         } catch (Exception e) {
             logger.warn( Route.API_LOGIN, e );
         } catch (Error e) {
             logger.warn( Route.API_LOGIN, e );
+        }
+        return response;
+    }
+
+    @RequestMapping( "/api/sample" )
+    @ResponseBody
+    public ApiResponse sampleForAccessToken(
+                    @RequestParam( "aaa" ) String aaa,
+                    @RequestParam( "bbb" ) String bbb ) {
+        ApiResponse response = new ApiResponse();
+        try {
+            response.getBody().setData( aaa + bbb );
+            response.setCode( ApiCode.Success );
+        } catch (Exception e) {
+            logger.warn( "/api/sample", e );
+        } catch (Error e) {
+            logger.warn( "/api/sample", e );
         }
         return response;
     }
