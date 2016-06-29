@@ -23,13 +23,13 @@
                 columns: [{
                     field: 'id',
                     title: 'ID',
-                    sortable: 'true',
+                    sortable: true,
                     valign: 'middle'
                 }, {
                     field: 'name',
                     title: '名称',
                     valign: 'middle',
-                    sortable: 'true',
+                    sortable: true,
                     formatter: function (value, row, index) {
                         return '<a href="admin/apps/' + row.id + '/edit">' + value + '</a>';
                     }
@@ -37,22 +37,23 @@
                     field: 'platformDesc',
                     title: '平台',
                     valign: 'middle',
-                    sortable: 'false'
+                    sortable: false,
+                    visible: false
                 }, {
                     field: 'version',
                     title: '版本',
                     valign: 'middle',
-                    sortable: 'true'
+                    sortable: true
                 }, {
                     field: 'bundleIdentifier',
                     title: '程序包ID',
                     valign: 'middle',
-                    sortable: 'false'
+                    sortable: false
                 }, {
                     field: 'statusDesc',
                     title: '状态',
                     valign: 'middle',
-                    sortable: 'false'
+                    sortable: false
                 }]
             });
         </script>
