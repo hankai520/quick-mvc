@@ -75,6 +75,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
      * API 访问鉴权码
      */
     public static final String           API_ACCESS_TOKEN     = "access_token";
+    /**
+     * API 请求中对入参的签名
+     */
+    public static final String           API_REQUEST_SIGN     = "sign";
 
     @Override
     public void addFormatters( FormatterRegistry registry ) {

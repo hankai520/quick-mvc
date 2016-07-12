@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class ApiRequestInterceptor implements HandlerInterceptor {
         Collections.sort( paramNames );
         for ( String param : paramNames ) {
             if ( param.equalsIgnoreCase( WebConfig.API_ACCESS_TOKEN )
-                || param.equalsIgnoreCase( "sign" ) ) {
+                || param.equalsIgnoreCase( WebConfig.API_REQUEST_SIGN ) ) {
                 continue;
             }
             Object objValue = params.get( param );
@@ -84,8 +85,23 @@ public class ApiRequestInterceptor implements HandlerInterceptor {
      * @since Jun 28, 2016 2:28:00 PM
      */
     public boolean verifyParameters( HttpServletRequest request ) {
-        String expSign = generateSign( request.getParameterMap() );
-        String sign = request.getParameter( "sign" );
+        Map<String, String[]> params = request.getParameterMap();
+        boolean hasParams = false;
+        Iterator<String> it = params.keySet().iterator();
+        while ( it.hasNext() ) {
+            String key = it.next();
+            if ( key.equalsIgnoreCase( WebConfig.API_ACCESS_TOKEN ) ||
+                key.equalsIgnoreCase( WebConfig.API_REQUEST_SIGN ) ) {
+                continue;
+            }
+            hasParams = true;
+            break;
+        }
+        if ( !hasParams ) {
+            return true;
+        }
+        String expSign = generateSign( params );
+        String sign = request.getParameter( WebConfig.API_REQUEST_SIGN );
         if ( expSign.equalsIgnoreCase( sign ) ) {
             return true;
         }
