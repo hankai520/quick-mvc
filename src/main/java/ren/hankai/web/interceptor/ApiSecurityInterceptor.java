@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -107,8 +109,15 @@ public class ApiSecurityInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle( HttpServletRequest request, HttpServletResponse response,
                     Object handler ) throws Exception {
-        String token = request.getParameter( WebConfig.API_ACCESS_TOKEN );
-        if ( verifyToken( token, response ) ) {
+        String token = null;
+        if ( request instanceof MultipartHttpServletRequest ) {
+            MultipartHttpServletRequest mreq = (MultipartHttpServletRequest) request;
+            MultipartFile file = mreq.getFile( WebConfig.API_ACCESS_TOKEN );
+            token = new String( file.getBytes(), "UTF-8" );
+        } else {
+            token = request.getParameter( WebConfig.API_ACCESS_TOKEN );
+        }
+        if ( !StringUtils.isEmpty( token ) && verifyToken( token, response ) ) {
             return true;
         }
         response.setStatus( HttpStatus.FORBIDDEN.value() );
