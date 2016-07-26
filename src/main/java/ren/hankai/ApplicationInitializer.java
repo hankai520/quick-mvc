@@ -27,6 +27,7 @@ public class ApplicationInitializer {
      */
     private static String[]     files  = {
         "h2.properties",
+        "hsql.properties",
         "mysql.properties",
         "oracle.properties",
         "system.yml"

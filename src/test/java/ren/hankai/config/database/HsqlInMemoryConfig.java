@@ -1,7 +1,7 @@
 
 package ren.hankai.config.database;
 
-import org.eclipse.persistence.platform.database.H2Platform;
+import org.eclipse.persistence.platform.database.HSQLPlatform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -15,28 +15,28 @@ import javax.sql.DataSource;
 import ren.hankai.Preferences;
 
 /**
- * 数据库配置基类
+ * HSQL 数据库配置类
  *
  * @author hankai
  * @version 1.0
  * @since Jul 14, 2015 12:38:04 PM
  */
-@Profile( { Preferences.PROFILE_TEST, Preferences.PROFILE_H2 } )
+@Profile( { Preferences.PROFILE_TEST, Preferences.PROFILE_HSQL } )
 @Configuration
-public class H2InMemoryConfig extends JpaDbConfig {
+public class HsqlInMemoryConfig extends JpaDbConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger( H2Config.class );
+    private static final Logger logger = LoggerFactory.getLogger( HsqlInMemoryConfig.class );
     static {
-        DB_PLATFORM = H2Platform.class.getName();
-        ENTITY_BASE_PACKAGE = new String[] { "ren.hankai" };
+        DB_PLATFORM = HSQLPlatform.class.getName();
+        ENTITY_BASE_PACKAGE = new String[] { "cn.com.sparksoft.persist.model" };
     }
 
     @Override
     @Bean
     protected DataSource getDataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName( "org.h2.Driver" );
-        ds.setUrl( "jdbc:h2:mem:ut-db;DB_CLOSE_DELAY=-1" );
+        ds.setDriverClassName( "org.hsqldb.jdbcDriver" );
+        ds.setUrl( "jdbc:hsqldb:mem:ut-db" );
         ds.setUsername( "sa" );
         ds.setPassword( null );
         return ds;
