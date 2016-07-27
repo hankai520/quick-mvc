@@ -33,52 +33,43 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     /**
      * 数据交换时，默认的日期格式
      */
-    public static final String           DATE_FORMAT          = "yyyy-MM-dd";
+    public static final String DATE_FORMAT          = "yyyy-MM-dd";
     /**
      * 数据交换式时，默认的日期时间格式
      */
-    public static final String           DATE_TIME_FORMAT     = "yyyy-MM-dd HH:mm:ss";
-    /**
-     * 默认的日期格式化
-     */
-    public static final SimpleDateFormat dateFormatter        = new SimpleDateFormat( DATE_FORMAT );
-    /**
-     * 默认的日期格时间式化
-     */
-    public static final SimpleDateFormat dateTimeFormatter    = new SimpleDateFormat(
-        DATE_TIME_FORMAT );
+    public static final String DATE_TIME_FORMAT     = "yyyy-MM-dd HH:mm:ss";
     /**
      * 会话数据键：当前登录用户
      */
-    public static final String           SESSION_KEY_USER     = "current_user";
+    public static final String SESSION_KEY_USER     = "current_user";
     /**
      * 会话数据键：用户登录前访问的 URL
      */
-    public static final String           SESSION_KEY_LAST_URL = "last_url";
+    public static final String SESSION_KEY_LAST_URL = "last_url";
     /**
      * Cookie数据键：登录名
      */
-    public static final String           COOKIE_KEY_LOGIN_ID  = "loginId";
+    public static final String COOKIE_KEY_LOGIN_ID  = "loginId";
     /**
      * Cookie数据键：密码
      */
-    public static final String           COOKIE_KEY_PASSWORD  = "password";
+    public static final String COOKIE_KEY_PASSWORD  = "password";
     /**
      * 用于在页面渲染前传递页面级提示消息
      */
-    public static final String           WEB_PAGE_MESSAGE     = "pageMessage";
+    public static final String WEB_PAGE_MESSAGE     = "pageMessage";
     /**
      * 用于在页面渲染前传递页面级错误
      */
-    public static final String           WEB_PAGE_ERROR       = "pageError";
+    public static final String WEB_PAGE_ERROR       = "pageError";
     /**
      * API 访问鉴权码
      */
-    public static final String           API_ACCESS_TOKEN     = "access_token";
+    public static final String API_ACCESS_TOKEN     = "access_token";
     /**
      * API 请求中对入参的签名
      */
-    public static final String           API_REQUEST_SIGN     = "sign";
+    public static final String API_REQUEST_SIGN     = "sign";
 
     @Override
     public void addFormatters( FormatterRegistry registry ) {
@@ -87,6 +78,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
             @Override
             public Date convert( String source ) {
+                SimpleDateFormat dateFormatter = new SimpleDateFormat( DATE_FORMAT );
+                SimpleDateFormat dateTimeFormatter = new SimpleDateFormat( DATE_TIME_FORMAT );
                 Date date = null;
                 try {
                     date = dateFormatter.parse( source );

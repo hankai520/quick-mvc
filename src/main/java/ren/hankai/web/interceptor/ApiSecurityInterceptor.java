@@ -101,6 +101,7 @@ public class ApiSecurityInterceptor implements HandlerInterceptor {
                 tokenInfo = objectMapper.readValue( decrypted, ApiTokenInfo.class );
             } catch (Exception e) {
                 logger.error( String.format( "Failed to parse token: \"%s\"", token ), e );
+                logger.error( String.format( "Decrypted data is: %s", decrypted ) );
             }
         }
         return tokenInfo;
