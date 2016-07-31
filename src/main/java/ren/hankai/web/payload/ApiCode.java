@@ -13,6 +13,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ApiCode {
     /**
+     * 签名错误
+     */
+    BadSignature( -1 ),
+    /**
      * 成功
      */
     Success( 1 ),
@@ -31,11 +35,7 @@ public enum ApiCode {
     /**
      * 需要登录授权
      */
-    AuthorizationRequired( 5 ),
-    /**
-     * 签名错误
-     */
-    BadSignature( 6 ),;
+    AuthorizationRequired( 5 ),;
 
     @JsonCreator
     public static ApiCode fromInteger( Integer value ) {
