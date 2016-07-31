@@ -68,4 +68,19 @@ public final class SystemConfig {
         }
         return null;
     }
+
+    /**
+     * 获取 API 鉴权码有效时长（天）
+     *
+     * @return 有效时长
+     * @author hankai
+     * @since Jun 29, 2016 9:48:43 PM
+     */
+    public static Integer getApiAccessTokenExpiry() {
+        Object obj = parameters.get( "apiAccessTokenExpiry" );
+        if ( obj != null ) {
+            return Integer.parseInt( obj.toString() );
+        }
+        return null;
+    }
 }
