@@ -60,7 +60,7 @@ public class UserController {
 
     /**
      * 用户登录（支持cookie自动登录）
-     * 
+     *
      * @param loginId 用户名
      * @param password 密码
      * @param user POST请求时的用户信息
@@ -122,6 +122,19 @@ public class UserController {
                 }
             }
         }
+        return mav;
+    }
+
+    @RequestMapping( Route.BG_LOGOUT )
+    public ModelAndView logout( HttpSession session, HttpServletResponse response ) {
+        ModelAndView mav = new ModelAndView( "redirect:" + Route.BG_LOGIN );
+        session.invalidate();
+        Cookie cookie = new Cookie( WebConfig.COOKIE_KEY_LOGIN_ID, "" );
+        cookie.setMaxAge( 0 );
+        response.addCookie( cookie );
+        cookie = new Cookie( WebConfig.COOKIE_KEY_PASSWORD, "" );
+        cookie.setMaxAge( 0 );
+        response.addCookie( cookie );
         return mav;
     }
 }

@@ -31,6 +31,10 @@ public class Preferences {
      */
     public static final String PROFILE_H2         = "h2";
     /**
+     * 启用 HSQL 数据库
+     */
+    public static final String PROFILE_HSQL       = "hsql";
+    /**
      * 启用 MySQL 数据库
      */
     public static final String PROFILE_MYSQL      = "mysql";

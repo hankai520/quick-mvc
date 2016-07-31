@@ -4,13 +4,18 @@ package ren.hankai.web.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +37,9 @@ import ren.hankai.web.payload.ApiResponse;
 @Component
 public class ApiRequestInterceptor implements HandlerInterceptor {
 
+    private static final Logger logger = LoggerFactory.getLogger( ApiRequestInterceptor.class );
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper        objectMapper;
 
     /**
      * 根据入参计算签名
@@ -50,7 +56,7 @@ public class ApiRequestInterceptor implements HandlerInterceptor {
         Collections.sort( paramNames );
         for ( String param : paramNames ) {
             if ( param.equalsIgnoreCase( WebConfig.API_ACCESS_TOKEN )
-                || param.equalsIgnoreCase( "sign" ) ) {
+                || param.equalsIgnoreCase( WebConfig.API_REQUEST_SIGN ) ) {
                 continue;
             }
             Object objValue = params.get( param );
@@ -64,6 +70,12 @@ public class ApiRequestInterceptor implements HandlerInterceptor {
                 value = objValue.toString();
             }
             if ( value != null ) {
+                try {
+                    value = URLEncoder.encode( value, "UTF-8" );
+                } catch (UnsupportedEncodingException e) {
+                    logger.warn( String.format( "Failed to url encode request parameter: %s = ",
+                        param, value ) );
+                }
                 toBeSigned.append( param + "=" + value + "&" );
             }
         }
@@ -84,8 +96,23 @@ public class ApiRequestInterceptor implements HandlerInterceptor {
      * @since Jun 28, 2016 2:28:00 PM
      */
     public boolean verifyParameters( HttpServletRequest request ) {
-        String expSign = generateSign( request.getParameterMap() );
-        String sign = request.getParameter( "sign" );
+        Map<String, String[]> params = request.getParameterMap();
+        boolean hasParams = false;
+        Iterator<String> it = params.keySet().iterator();
+        while ( it.hasNext() ) {
+            String key = it.next();
+            if ( key.equalsIgnoreCase( WebConfig.API_ACCESS_TOKEN ) ||
+                key.equalsIgnoreCase( WebConfig.API_REQUEST_SIGN ) ) {
+                continue;
+            }
+            hasParams = true;
+            break;
+        }
+        if ( !hasParams ) {
+            return true;
+        }
+        String expSign = generateSign( params );
+        String sign = request.getParameter( WebConfig.API_REQUEST_SIGN );
         if ( expSign.equalsIgnoreCase( sign ) ) {
             return true;
         }

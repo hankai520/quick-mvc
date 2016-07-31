@@ -6,8 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -65,16 +68,7 @@ public class ApiSecurityInterceptor implements HandlerInterceptor {
      * @since Jun 29, 2016 9:17:15 PM
      */
     public boolean verifyToken( String rawToken, HttpServletResponse response ) {
-        if ( StringUtils.isEmpty( rawToken ) ) {
-            return false;
-        }
-        String decrypted = EncryptionUtil.aes( rawToken, SystemConfig.getSystemSk(), false );
-        ApiTokenInfo tokenInfo = null;
-        try {
-            tokenInfo = objectMapper.readValue( decrypted, ApiTokenInfo.class );
-        } catch (Exception e) {
-            logger.error( String.format( "Failed to parse token: \"%s\"", rawToken ), e );
-        }
+        ApiTokenInfo tokenInfo = parseToken( rawToken );
         if ( tokenInfo == null ) {
             return false;
         } else if ( tokenInfo.getExpiryTime().before( new Date() ) ) {
@@ -91,13 +85,43 @@ public class ApiSecurityInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /**
+     * 解析API鉴权码
+     *
+     * @param token 鉴权码
+     * @return 鉴权信息
+     * @author hankai
+     * @since Jun 29, 2016 9:56:29 PM
+     */
+    public ApiTokenInfo parseToken( String token ) {
+        ApiTokenInfo tokenInfo = null;
+        String decrypted = EncryptionUtil.aes( token, SystemConfig.getSystemSk(), false );
+        if ( !StringUtils.isEmpty( token ) ) {
+            try {
+                tokenInfo = objectMapper.readValue( decrypted, ApiTokenInfo.class );
+            } catch (Exception e) {
+                logger.error( String.format( "Failed to parse token: \"%s\"", token ), e );
+                logger.error( String.format( "Decrypted data is: %s", decrypted ) );
+            }
+        }
+        return tokenInfo;
+    }
+
     @Override
     public boolean preHandle( HttpServletRequest request, HttpServletResponse response,
                     Object handler ) throws Exception {
-        String token = request.getParameter( WebConfig.API_ACCESS_TOKEN );
-        if ( verifyToken( token, response ) ) {
+        String token = null;
+        if ( request instanceof MultipartHttpServletRequest ) {
+            MultipartHttpServletRequest mreq = (MultipartHttpServletRequest) request;
+            MultipartFile file = mreq.getFile( WebConfig.API_ACCESS_TOKEN );
+            token = new String( file.getBytes(), "UTF-8" );
+        } else {
+            token = request.getParameter( WebConfig.API_ACCESS_TOKEN );
+        }
+        if ( !StringUtils.isEmpty( token ) && verifyToken( token, response ) ) {
             return true;
         }
+        response.setStatus( HttpStatus.FORBIDDEN.value() );
         return false;
     }
 

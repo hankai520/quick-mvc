@@ -54,7 +54,7 @@ public class UserApiTest extends ApplicationTests {
         MvcResult result = mockMvc.perform(
             post( Route.API_LOGIN )
                 .contentType( MediaType.APPLICATION_FORM_URLENCODED )
-                .param( "sign", sign )
+                .param( WebConfig.API_REQUEST_SIGN, sign )
                 .param( "login_id", params.get( "login_id" ) )
                 .param( "password", params.get( "password" ) )
                 .param( "device_token", params.get( "device_token" ) ) )
@@ -86,7 +86,7 @@ public class UserApiTest extends ApplicationTests {
             post( "/api/sample" )
                 .contentType( MediaType.APPLICATION_FORM_URLENCODED )
                 .param( WebConfig.API_ACCESS_TOKEN, token )
-                .param( "sign", sign )
+                .param( WebConfig.API_REQUEST_SIGN, sign )
                 .param( "aaa", params.get( "aaa" ) )
                 .param( "bbb", params.get( "bbb" ) ) )
             .andExpect( status().isOk() )

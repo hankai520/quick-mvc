@@ -14,6 +14,7 @@ public final class Route {
     public static final String  API_LOGIN         = API_PREFIX + "/login";
     public static final String  BACKGROUND_PREFIX = "/admin";
     public static final String  BG_LOGIN          = BACKGROUND_PREFIX + "/login";
+    public static final String  BG_LOGOUT         = BACKGROUND_PREFIX + "/logout";
     public static final String  BG_SAMPLE         = BACKGROUND_PREFIX + "/sample";
     public static final String  FG_SAMPLE         = "/sample";
 }
