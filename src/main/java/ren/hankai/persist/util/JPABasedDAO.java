@@ -55,7 +55,7 @@ public abstract class JPABasedDAO<T> {
     }
 
     @Transactional
-    public void deleteByID( Object id ) {
+    public void deleteById( Object id ) {
         T entity = find( id );
         if ( entity == null ) {
             throw new EntityNotFoundException();

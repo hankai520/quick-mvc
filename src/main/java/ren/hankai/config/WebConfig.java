@@ -16,6 +16,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.http.HttpSession;
+
+import ren.hankai.persist.model.User;
 import ren.hankai.web.interceptor.AdministrationInterceptor;
 import ren.hankai.web.interceptor.ApiRequestInterceptor;
 import ren.hankai.web.interceptor.ApiSecurityInterceptor;
@@ -116,5 +119,22 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public MappingJackson2HttpMessageConverter getJackson2HttpMessageConverter( ObjectMapper om ) {
         return new MappingJackson2HttpMessageConverter( om );
+    }
+
+    /**
+     * 获取会话中的用户信息
+     *
+     * @param session 会话
+     * @return 用户
+     * @author hankai
+     * @since Jul 3, 2016 11:36:35 AM
+     */
+    public static User getUserInSession( HttpSession session ) {
+        Object userObj = session.getAttribute( WebConfig.SESSION_KEY_USER );
+        if ( ( userObj != null ) && ( userObj instanceof User ) ) {
+            User user = (User) userObj;
+            return user;
+        }
+        return null;
     }
 }
