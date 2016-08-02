@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -27,7 +29,27 @@ import ren.hankai.persist.model.User;
 public class AdministrationInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private UserService userService;
+    private UserService   userService;
+    /**
+     * 从应用包中解析版本号
+     */
+    private static String version = null;
+
+    private void parsePackageVersion( HttpServletRequest request ) {
+        if ( version == null ) {
+            version = getClass().getPackage().getImplementationVersion();
+            if ( version == null ) {
+                Properties prop = new Properties();
+                try {
+                    prop.load(
+                        request.getServletContext()
+                            .getResourceAsStream( "/META-INF/MANIFEST.MF" ) );
+                    version = prop.getProperty( "Implementation-Version" );
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
 
     @Override
     public boolean preHandle( HttpServletRequest request, HttpServletResponse response,
@@ -39,7 +61,10 @@ public class AdministrationInterceptor implements HandlerInterceptor {
         }
         HttpSession session = request.getSession();
         // 程序完整版本号
-        // session.setAttribute( name, value );
+        parsePackageVersion( request );
+        if ( !StringUtils.isEmpty( version ) ) {
+            session.setAttribute( "version", version );
+        }
         Object userObj = session.getAttribute( WebConfig.SESSION_KEY_USER );
         User user = null;
         if ( ( userObj != null ) && ( userObj instanceof User ) ) {
