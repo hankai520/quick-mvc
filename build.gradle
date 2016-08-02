@@ -18,6 +18,10 @@ apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management' 
 apply plugin: 'war'
 
+ext {
+    appVersion = '0.0.1'
+}
+
 sourceSets {
     main.java.srcDirs = ['src/main/java']
     main.resources.srcDirs = ['src/main/resources', 'src/main/webapp']
@@ -27,7 +31,12 @@ sourceSets {
 
 war {
     baseName = 'quick-mvc'
-    version = '0.0.1'
+    version = appVersion
+    manifest {
+        attributes(
+            "Implementation-Version": appVersion
+        )
+    }
 }
 
 sourceCompatibility = 1.7
