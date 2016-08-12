@@ -11,15 +11,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import ren.hankai.config.Route;
 import ren.hankai.config.SystemConfig;
-import ren.hankai.config.WebConfig;
+import ren.hankai.persist.UserService;
+import ren.hankai.persist.model.User;
+import ren.hankai.persist.model.UserRole;
+import ren.hankai.persist.model.UserStatus;
 import ren.hankai.web.interceptor.ApiSecurityInterceptor;
 import ren.hankai.web.payload.ApiCode;
 import ren.hankai.web.payload.ApiResponse;
 import ren.hankai.web.payload.ApiTokenInfo;
+import ren.hankai.web.payload.BusinessError;
 
 /**
  * 用户接口
@@ -34,6 +37,8 @@ public class UserApi {
     private static final Logger    logger = LoggerFactory.getLogger( UserApi.class );
     @Autowired
     private ApiSecurityInterceptor apiSecurityInterceptor;
+    @Autowired
+    private UserService            userService;
 
     @RequestMapping( Route.API_LOGIN )
     @ResponseBody
@@ -43,16 +48,24 @@ public class UserApi {
                     @RequestParam( "device_token" ) String deviceToken ) {
         ApiResponse response = new ApiResponse();
         try {
-            ApiTokenInfo ati = new ApiTokenInfo();
-            ati.setUid( 1 );
-            ati.setExpiryTime(
-                DateUtils.addDays( new Date(), SystemConfig.getApiAccessTokenExpiry() ) );
-            String token = apiSecurityInterceptor.generateToken( ati );
-            HashMap<String, Object> data = new HashMap<>();
-            data.put( "user", "hello1" );
-            data.put( WebConfig.API_ACCESS_TOKEN, token );
-            response.getBody().setData( data );
-            response.getBody().setSuccess( true );
+            User user = userService.find( loginId, password, UserRole.MobileUser );
+            if ( user == null ) {
+                response.getBody().setError( BusinessError.InvalidAccount );
+            } else if ( user.getRole() != UserRole.MobileUser ) {
+                response.getBody().setError( BusinessError.InvalidRole );
+            } else if ( user.getStatus() != UserStatus.Enabled ) {
+                response.getBody().setError( BusinessError.InvalidStatus );
+            } else {
+                ApiTokenInfo ati = new ApiTokenInfo();
+                ati.setUid( user.getId() );
+                ati.setExpiryTime(
+                    DateUtils.addDays( new Date(), SystemConfig.getApiAccessTokenExpiry() ) );
+                String token = apiSecurityInterceptor.generateToken( ati );
+                user.setAccessToken( token );
+                user.setTokenExpiry( ati.getExpiryTime() );
+                response.getBody().setData( user );
+                response.getBody().setSuccess( true );
+            }
             response.setCode( ApiCode.Success );
         } catch (Exception e) {
             logger.warn( Route.API_LOGIN, e );

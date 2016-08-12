@@ -31,23 +31,44 @@ public class JpaServiceUtil {
     private EntityManager entityManager;
 
     /**
-     * Get the total number of records of specific entity.
+     * 查询实体个数
      *
-     * @param clazz entity class
-     * @return number of entities.
+     * @param clazz 实体类型
+     * @return 实体个数
      */
-    public long countEntity( Class<?> clazz ) {
+    public <T> long countEntity( Class<T> clazz ) {
+        return countEntity( clazz, null );
+    }
+
+    /**
+     * 查询实体个数
+     *
+     * @param clazz 实体类型
+     * @param builder 查询条件构造器
+     * @return 实体个数
+     * @author hankai
+     * @since Jul 11, 2016 1:34:53 PM
+     */
+    public <T> long countEntity( Class<T> clazz, PredicateBuilder builder ) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery( Long.class );
-        cq.select( cb.count( cq.from( clazz ) ) );
+        Root<T> root = cq.from( clazz );
+        cq.select( cb.count( root ) );
+        Predicate pre = null;
+        if ( builder != null ) {
+            pre = builder.buildPredicate( cb, root );
+        }
+        if ( pre != null ) {
+            cq.where( pre );
+        }
         return entityManager.createQuery( cq ).getSingleResult();
     }
 
     /**
-     * Delete all instances of specific class.
+     * 删除指定实体类的所有记录
      *
-     * @param clazz the instance class.
-     * @return how many instances affected.
+     * @param clazz 实体类型
+     * @return 删除掉得记录数
      */
     @Transactional
     public int deleteAll( Class<?> clazz ) {
@@ -57,41 +78,35 @@ public class JpaServiceUtil {
     }
 
     /**
-     * Find the unique instance of a class with the unique identifier.
+     * 根据主键值查询实体
      *
-     * @param clazz the instance class
-     * @return the instance.
+     * @param clazz 实体类型
+     * @param id 主键值
+     * @return 实体
+     * @author hankai
+     * @since Jul 11, 2016 2:24:17 PM
      */
     public <T> T find( Class<T> clazz, Object id ) {
         return entityManager.find( clazz, id );
     }
 
-    public <T> PaginatedResult<T> findAll( Class<T> clazz, CriteriaQueryBuilder predicateBuilder ) {
-        return findAll( clazz, predicateBuilder, 0, -1 );
-    }
-
     /**
-     * Find entities with pagination support.
+     * 分页查询实体
      *
-     * @param clazz the Class of the entity
-     * @param predicateBuilder the predicate used to query entities.
-     * @param offset pagination offset
-     * @param count max number of results returns
+     * @param clazz 实体类型
+     * @param pb 查询 WHERE 条件构造器
+     * @param ob 查询 ORDER BY 条件构造器
+     * @param pagination 分页信息
+     * @return 分页查询结果
      */
-    public <T> PaginatedResult<T> findAll( Class<T> clazz, CriteriaQueryBuilder predicateBuilder,
-                    int offset, int count ) {
+    public <T> PaginatedResult<T> findAllPaginated( Class<T> clazz, PredicateBuilder pb,
+                    OrderBuilder ob, Pagination pagination ) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq1 = cb.createQuery( Long.class );
         Root<T> root = cq1.from( clazz );
         cq1.select( cb.count( root ) );
-        Predicate predicate = null;
-        if ( predicateBuilder != null ) {
-            predicate = predicateBuilder.buildPredicate( cb, root );
-        }
-        List<Order> orderBys = null;
-        if ( predicateBuilder != null ) {
-            orderBys = predicateBuilder.getOrderBys( cb, root );
-        }
+        Predicate predicate = ( pb != null ) ? pb.buildPredicate( cb, root ) : null;
+        List<Order> orderBys = ( ob != null ) ? ob.getOrderBys( cb, root ) : null;
         if ( predicate != null ) {
             cq1.where( predicate );
         }
@@ -106,29 +121,68 @@ public class JpaServiceUtil {
         if ( ( orderBys != null ) && ( orderBys.size() > 0 ) ) {
             cq2.orderBy( orderBys );
         }
-        TypedQuery<T> q2 = entityManager.createQuery( cq2 ).setFirstResult( offset );
-        if ( count > 0 ) {
-            q2.setMaxResults( count );
+        TypedQuery<T> q2 =
+                         entityManager.createQuery( cq2 ).setFirstResult( pagination.getOffset() );
+        if ( pagination.getSize() > 0 ) {
+            q2.setMaxResults( pagination.getSize() );
         }
         try {
             result.setObjects( q2.getResultList() );
         } catch (NoResultException e) {
-            // ignore this exception
         }
-        int loaded = offset + result.getObjects().size();
+        int loaded = pagination.getOffset() + result.getObjects().size();
         result.setHasMore( loaded < result.getCount() );
         return result;
     }
 
     /**
-     * The override version of findAll. Find entities without predicates.
+     * 分页查询所有实体
      *
-     * @param clazz the entity class
-     * @param offset pagination offset (inclusive)
-     * @param count max number of results returned.
+     * @param clazz 实体类型
+     * @param pagination 分页信息
+     * @return 实体列表
+     * @author hankai
+     * @since Jul 11, 2016 2:26:22 PM
      */
-    public <T> PaginatedResult<T> findAll( Class<T> clazz, int offset, int count ) {
-        return findAll( clazz, null, offset, count );
+    public <T> PaginatedResult<T> findAllPaginated( Class<T> clazz, Pagination pagination ) {
+        return findAllPaginated( clazz, null, null, pagination );
+    }
+
+    public <T> List<T> findAllInList( Class<T> clazz, PredicateBuilder pb, OrderBuilder ob ) {
+        return findAllInList( clazz, pb, ob, Pagination.offsetAndCount( 0, -1 ) );
+    }
+
+    /**
+     * 查询所有满足条件的实体，并将结果集以 List 类型返回
+     *
+     * @param clazz 实体类型
+     * @param pb 查询条件构造器
+     * @param ob 排序条件构造器
+     * @param pagination 分页信息
+     * @return 实体列表
+     * @author hankai
+     * @since Jul 11, 2016 1:48:16 PM
+     */
+    public <T> List<T> findAllInList( Class<T> clazz, PredicateBuilder pb, OrderBuilder ob,
+                    Pagination pagination ) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery( clazz );
+        Root<T> root = cq.from( clazz );
+        Predicate predicate = ( pb != null ) ? pb.buildPredicate( cb, root ) : null;
+        List<Order> orderBys = ( ob != null ) ? ob.getOrderBys( cb, root ) : null;
+        cq.select( root );
+        if ( predicate != null ) {
+            cq.where( predicate );
+        }
+        if ( ( orderBys != null ) && ( orderBys.size() > 0 ) ) {
+            cq.orderBy( orderBys );
+        }
+        try {
+            return entityManager.createQuery( cq ).setFirstResult( pagination.getOffset() )
+                .setMaxResults( pagination.getSize() ).getResultList();
+        } catch (NoResultException e) {
+        }
+        return null;
     }
 
     public <T> T findUniqueBy( Class<T> clazz, String fieldName, Object fieldValue ) {

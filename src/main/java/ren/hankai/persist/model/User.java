@@ -1,6 +1,8 @@
 
 package ren.hankai.persist.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,8 +15,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import ren.hankai.web.util.DateTimeSerializer;
 
 /**
  * 用户（后台运维或客户端用户）
@@ -46,6 +51,12 @@ public class User implements Serializable {
     @Pattern(
         regexp = "\\d*" )
     private String            mobile;
+    @Column(
+        length = 45 )
+    @Size(
+        min = 0,
+        max = 20 )
+    private String            name;
     /**
      * 登录密码
      */
@@ -73,10 +84,23 @@ public class User implements Serializable {
      * 账号状态
      */
     private UserStatus        status;
+    @Transient
+    private String            statusName;
     /**
      * 用户角色
      */
     private UserRole          role;
+    @Transient
+    private String            roleName;
+    @Transient
+    private String            accessToken;
+    @Transient
+    private Date              tokenExpiry;
+    @Column
+    private ClientType        clientType;
+    @Column(
+        length = 200 )
+    private String            deviceToken;
 
     public Integer getId() {
         return id;
@@ -94,6 +118,14 @@ public class User implements Serializable {
         this.mobile = mobile;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -102,6 +134,8 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    @JsonSerialize(
+        using = DateTimeSerializer.class )
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -110,6 +144,8 @@ public class User implements Serializable {
         this.updateTime = updateTime;
     }
 
+    @JsonSerialize(
+        using = DateTimeSerializer.class )
     public Date getCreateTime() {
         return createTime;
     }
@@ -132,6 +168,56 @@ public class User implements Serializable {
 
     public void setRole( UserRole role ) {
         this.role = role;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken( String accessToken ) {
+        this.accessToken = accessToken;
+    }
+
+    @JsonSerialize(
+        using = DateTimeSerializer.class )
+    public Date getTokenExpiry() {
+        return tokenExpiry;
+    }
+
+    public void setTokenExpiry( Date tokenExpiry ) {
+        this.tokenExpiry = tokenExpiry;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName( String statusName ) {
+        this.statusName = statusName;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName( String roleName ) {
+        this.roleName = roleName;
+    }
+
+    public ClientType getClientType() {
+        return clientType;
+    }
+
+    public void setClientType( ClientType clientType ) {
+        this.clientType = clientType;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken( String deviceToken ) {
+        this.deviceToken = deviceToken;
     }
 
     public static long getSerialversionuid() {

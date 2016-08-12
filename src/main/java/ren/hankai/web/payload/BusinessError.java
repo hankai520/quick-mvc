@@ -19,7 +19,12 @@ public enum BusinessError {
     /**
      * 用户角色不正确（例如：非审查员登录）
      */
-    InvalidRole( 2 );
+    InvalidRole( 2 ),
+    /**
+     * 账号状态错误
+     */
+    InvalidStatus( 3 ),
+    ;
 
     @JsonCreator
     public static BusinessError fromInteger( Integer value ) {
@@ -27,6 +32,8 @@ public enum BusinessError {
             return InvalidAccount;
         } else if ( value == InvalidRole.value ) {
             return InvalidRole;
+        } else if ( value == InvalidStatus.value ) {
+            return InvalidStatus;
         }
         return null;
     }

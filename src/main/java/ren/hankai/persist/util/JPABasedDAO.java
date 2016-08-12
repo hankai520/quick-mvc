@@ -72,7 +72,8 @@ public abstract class JPABasedDAO<T> {
     }
 
     public PaginatedResult<T> findAll( int offset, int count ) {
-        return jpaServiceUtil.findAll( entityClass, offset, count );
+        return jpaServiceUtil.findAllPaginated( entityClass,
+            Pagination.offsetAndCount( offset, count ) );
     }
 
     public void refresh( T entity ) {

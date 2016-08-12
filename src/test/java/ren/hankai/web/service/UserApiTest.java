@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,10 +45,9 @@ public class UserApiTest extends ApplicationTests {
     @Test
     public void testLogin() throws Exception {
         Map<String, String> params = new HashMap<>();
-        params.put( "login_id", "111" );
-        params.put( "password", DigestUtils.md5Hex( "111" ) );
-        params.put( "device_token",
-            "745b9da069a02ed49765010ab8b3390dbbb8b3fcc049b2f681e3241787aa525f" );
+        params.put( "login_id", testUser.getMobile() );
+        params.put( "password", testUser.getPassword() );
+        params.put( "device_token", "test token" );
         String sign = apiRequestInterceptor.generateSign( params );
         MvcResult result = mockMvc.perform(
             post( Route.API_LOGIN )
@@ -67,8 +65,10 @@ public class UserApiTest extends ApplicationTests {
         ApiResponse response = objectMapper.readValue( result.getResponse().getContentAsString(),
             ApiResponse.class );
         Map<String, Object> data = (Map<String, Object>) response.getBody().getData();
-        Assert.assertEquals( "hello1", data.get( "part1" ) );
-        Assert.assertEquals( "hello2", data.get( "part2" ) );
+        Assert.assertEquals( testUser.getMobile(), data.get( "mobile" ) );
+        Assert.assertEquals( testUser.getId(), data.get( "id" ) );
+        Assert.assertNotNull( data.get( "accessToken" ) );
+        Assert.assertNotNull( data.get( "tokenExpiry" ) );
     }
 
     @Test

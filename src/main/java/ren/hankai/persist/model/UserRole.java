@@ -19,14 +19,21 @@ public enum UserRole {
     /**
      * 无线客户端用户
      */
-    MobileUser( 1 ),;
+    MobileUser( 1 ),
+    /**
+     * 超级管理员
+     */
+    SuperAdmin( 2 ),
+    ;
 
     @JsonCreator
     public static UserRole fromInteger( Integer value ) {
-        if ( value == Operator.value ) {
+        if ( Operator.value == value ) {
             return Operator;
-        } else if ( value == MobileUser.value ) {
+        } else if ( MobileUser.value == value ) {
             return MobileUser;
+        } else if ( SuperAdmin.value == value ) {
+            return SuperAdmin;
         }
         return null;
     }

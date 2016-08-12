@@ -28,7 +28,7 @@ public class HsqlConfig extends JpaDbConfig {
     private static final Logger logger = LoggerFactory.getLogger( HsqlConfig.class );
     static {
         DB_PLATFORM = HSQLPlatform.class.getName();
-        ENTITY_BASE_PACKAGE = new String[] { "cn.com.sparksoft.persist.model" };
+        ENTITY_BASE_PACKAGE = new String[] { "ren.hankai" };
     }
 
     @Override

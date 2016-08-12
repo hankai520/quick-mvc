@@ -3,6 +3,7 @@ package ren.hankai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Date;
+
+import ren.hankai.persist.UserService;
+import ren.hankai.persist.model.User;
+import ren.hankai.persist.model.UserRole;
+import ren.hankai.persist.model.UserStatus;
 import ren.hankai.persist.util.JpaServiceUtil;
 import ren.hankai.web.interceptor.ApiRequestInterceptor;
 
@@ -40,9 +47,12 @@ public abstract class ApplicationTests {
     protected ObjectMapper          objectMapper;
     @Autowired
     protected ApiRequestInterceptor apiRequestInterceptor;
+    @Autowired
+    protected UserService           userService;
     static {
         ApplicationInitializer.initialize();
     }
+    protected User testUser;
 
     /**
      * 初始化 spring mvc 测试环境，清空数据库记录。
@@ -54,9 +64,23 @@ public abstract class ApplicationTests {
     public void setUpMVC() {
         mockMvc = MockMvcBuilders.webAppContextSetup( ctx ).build();
         Class<?>[] classes = {
+            User.class
         };
         for ( Class<?> class1 : classes ) {
             jpaServiceUtil.deleteAll( class1 );
+        }
+        initTestFixures();
+    }
+
+    private void initTestFixures() {
+        if ( testUser == null ) {
+            testUser = new User();
+            testUser.setCreateTime( new Date() );
+            testUser.setMobile( "111" );
+            testUser.setPassword( DigestUtils.md5Hex( "123" ) );
+            testUser.setRole( UserRole.MobileUser );
+            testUser.setStatus( UserStatus.Enabled );
+            userService.save( testUser );
         }
     }
 }
