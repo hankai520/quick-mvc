@@ -24,6 +24,9 @@ public final class Route {
                                                BACKGROUND_PREFIX + "/users/{user_id}/delete";
     public static final String  BG_CHANGE_USER_PWD = BACKGROUND_PREFIX
         + "/users/{user_id}/change_pwd";
+    public static final String  BG_DB_BACKUPS      = BACKGROUND_PREFIX + "/db_backups";
+    public static final String  BG_DB_BACKUPS_JSON = BACKGROUND_PREFIX + "/db_backups.json";
+    public static final String  BG_ADD_DB_BACKUP   = BACKGROUND_PREFIX + "/db_backups/add";
     public static final String  BG_SAMPLE          = BACKGROUND_PREFIX + "/sample";
     private static final String FOREGROUND_PREFIX  = "/home";
     public static final String  FG_SAMPLE          = FOREGROUND_PREFIX + "/sample";

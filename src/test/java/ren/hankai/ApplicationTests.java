@@ -21,7 +21,6 @@ import ren.hankai.persist.UserService;
 import ren.hankai.persist.model.User;
 import ren.hankai.persist.model.UserRole;
 import ren.hankai.persist.model.UserStatus;
-import ren.hankai.persist.util.JpaServiceUtil;
 import ren.hankai.web.interceptor.ApiRequestInterceptor;
 
 /**
@@ -42,8 +41,6 @@ public abstract class ApplicationTests {
     protected WebApplicationContext ctx;
     protected MockMvc               mockMvc;
     @Autowired
-    protected JpaServiceUtil        jpaServiceUtil;
-    @Autowired
     protected ObjectMapper          objectMapper;
     @Autowired
     protected ApiRequestInterceptor apiRequestInterceptor;
@@ -63,12 +60,7 @@ public abstract class ApplicationTests {
     @Before
     public void setUpMVC() {
         mockMvc = MockMvcBuilders.webAppContextSetup( ctx ).build();
-        Class<?>[] classes = {
-            User.class
-        };
-        for ( Class<?> class1 : classes ) {
-            jpaServiceUtil.deleteAll( class1 );
-        }
+        userService.deleteAllInBatch();
         initTestFixures();
     }
 

@@ -48,25 +48,35 @@ repositories {
 
 configurations {
     providedRuntime
+    compile.exclude module: 'hibernate-entitymanager'
 }
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-configuration-processor")
+    
     compile("javax.servlet:jstl")
+    
     compile("org.slf4j:slf4j-api")
     compile("org.slf4j:jcl-over-slf4j")
     compile("ch.qos.logback:logback-classic")
+    
     compile("org.eclipse.persistence:eclipselink:2.5.0")
+    
     compile("commons-codec:commons-codec:1.9")
     compile("commons-fileupload:commons-fileupload:1.3.1")
     compile("commons-lang:commons-lang:2.6")
+    
     compile("org.apache.httpcomponents:httpclient:4.5")
-    runtime("com.h2database:h2")
+    
     runtime ("org.hsqldb:hsqldb:2.3.4")
-    runtime("mysql:mysql-connector-java")
-    runtime files("libs/ojdbc6.jar")
+    
+    //使用 mysql 数据库时解开注释
+    //runtime("mysql:mysql-connector-java")
+    
+    //使用 oracle 数据库时解开注释
+    //runtime files("libs/ojdbc6.jar")
 
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     providedRuntime("org.apache.tomcat.embed:tomcat-embed-jasper")

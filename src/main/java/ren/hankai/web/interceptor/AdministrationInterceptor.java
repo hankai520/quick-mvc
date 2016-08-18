@@ -70,7 +70,7 @@ public class AdministrationInterceptor implements HandlerInterceptor {
         if ( ( userObj != null ) && ( userObj instanceof User ) ) {
             user = (User) userObj;
             // 更新会话中缓存的用户信息
-            user = userService.find( user.getId() );
+            user = userService.findOne( user.getId() );
             session.setAttribute( WebConfig.SESSION_KEY_USER, user );
             return true;
         } else {

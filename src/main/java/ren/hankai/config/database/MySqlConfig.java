@@ -5,12 +5,9 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;
 import org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;
 import org.eclipse.persistence.platform.database.MySQLPlatform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
 
@@ -23,14 +20,14 @@ import ren.hankai.Preferences;
  * @version 1.0
  * @since Jul 14, 2015 12:38:04 PM
  */
-@Profile( Preferences.PROFILE_MYSQL )
+@Profile( { Preferences.PROFILE_PRODUCTION, Preferences.PROFILE_MYSQL } )
 @Configuration
-public class MySqlConfig extends JpaDbConfig {
+public class MySqlConfig extends JpaCustomConfiguration {
 
-    private static final Logger logger = LoggerFactory.getLogger( MySqlConfig.class );
     static {
         DB_PLATFORM = MySQLPlatform.class.getName();
-        ENTITY_BASE_PACKAGE = new String[] { "ren.hankai" };
+        // 自定义需要扫描的实体类基包
+        // ENTITY_BASE_PACKAGE = new String[] { "ren.hankai" };
     }
 
     @Override
@@ -63,11 +60,5 @@ public class MySqlConfig extends JpaDbConfig {
         org.apache.tomcat.jdbc.pool.DataSource ds = new org.apache.tomcat.jdbc.pool.DataSource();
         ds.setPoolProperties( pp );
         return ds;
-    }
-
-    @Override
-    @Bean
-    public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
-        return super.getEntityManagerFactory();
     }
 }

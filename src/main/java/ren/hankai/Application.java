@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableSpringConfigured
 @EnableAspectJAutoProxy
+@EnableJpaRepositories
 @EnableTransactionManagement
 @EnableConfigurationProperties
 public class Application extends SpringBootServletInitializer {

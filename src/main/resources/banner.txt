@@ -1,6 +1,6 @@
 ============================================================================================================
 
-程序版本： ${application.formatted-version}
+Application Version: ${application.formatted-version}
 
 Powered by: Spring Boot ${spring-boot.formatted-version}
 

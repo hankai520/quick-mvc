@@ -48,7 +48,7 @@ public class UserApi {
                     @RequestParam( "device_token" ) String deviceToken ) {
         ApiResponse response = new ApiResponse();
         try {
-            User user = userService.find( loginId, password, UserRole.MobileUser );
+            User user = userService.findOne( loginId, password, UserRole.MobileUser );
             if ( user == null ) {
                 response.getBody().setError( BusinessError.InvalidAccount );
             } else if ( user.getRole() != UserRole.MobileUser ) {

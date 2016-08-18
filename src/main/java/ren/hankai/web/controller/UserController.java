@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -27,13 +29,13 @@ import javax.validation.Valid;
 
 import ren.hankai.config.Route;
 import ren.hankai.config.WebConfig;
+import ren.hankai.persist.EntitySpecification;
 import ren.hankai.persist.UserService;
+import ren.hankai.persist.UserSpecification;
 import ren.hankai.persist.model.User;
 import ren.hankai.persist.model.UserRole;
 import ren.hankai.persist.model.UserStatus;
-import ren.hankai.persist.util.JpaServiceUtil;
-import ren.hankai.persist.util.PaginatedResult;
-import ren.hankai.persist.util.Pagination;
+import ren.hankai.persist.util.PageUtil;
 import ren.hankai.web.payload.PaginatedList;
 import ren.hankai.web.payload.UserViewModel;
 
@@ -48,8 +50,6 @@ import ren.hankai.web.payload.UserViewModel;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger( UserController.class );
-    @Autowired
-    private JpaServiceUtil      jpaUtil;
     @Autowired
     private MessageSource       messageSource;
     @Autowired
@@ -118,7 +118,8 @@ public class UserController {
             mav.setViewName( "admin/login" );
         } else {
             if ( !br.hasErrors() ) {
-                User localUser = jpaUtil.findUniqueBy( User.class, "mobile", user.getLoginId() );
+                User localUser = userService
+                    .findOne( EntitySpecification.field( "mobile", user.getLoginId() ) );
                 if ( localUser == null ) {
                     br.rejectValue( "loginId", "admin.login.account.not.found" );
                 } else if ( !user.getPassword().equalsIgnoreCase( localUser.getPassword() ) ) {
@@ -187,18 +188,19 @@ public class UserController {
         try {
             User currentUser = WebConfig.getUserInSession( session );
             boolean asc = "asc".equalsIgnoreCase( order );
-            PaginatedResult<User> result = userService.search( currentUser, null, search, sort, asc,
-                Pagination.offsetAndCount( offset, limit ) );
-            if ( ( result.getObjects() != null ) && ( result.getObjects().size() > 0 ) ) {
-                for ( User u : result.getObjects() ) {
+            Pageable pageable = PageUtil.pageWithOffsetAndCount( offset, limit, sort, asc );
+            Page<User> result = userService
+                .findAll( UserSpecification.bgSearch( currentUser, null, search ), pageable );
+            if ( ( result != null ) && result.hasContent() ) {
+                for ( User u : result.getContent() ) {
                     u.setStatusName(
                         messageSource.getMessage( u.getStatus().i18nKey(), null, null ) );
                     u.setRoleName( messageSource.getMessage( u.getRole().i18nKey(), null, null ) );
                 }
             }
             response = new PaginatedList();
-            response.setTotal( result.getCount() );
-            response.setRows( result.getObjects() );
+            response.setTotal( (int) result.getTotalElements() );
+            response.setRows( result.getContent() );
         } catch (Exception e) {
             logger.error( "Failed to get user list.", e );
         } catch (Error e) {
@@ -222,7 +224,8 @@ public class UserController {
     public ModelAndView addUser( HttpSession session, @ModelAttribute( "user" ) @Valid User user,
                     BindingResult br ) {
         ModelAndView mav = new ModelAndView( "admin/add_user" );
-        User duplicate = jpaUtil.findUniqueBy( User.class, "mobile", user.getMobile() );
+        User duplicate = userService
+            .findOne( EntitySpecification.field( "mobile", user.getMobile() ) );
         if ( ( duplicate != null ) && !duplicate.getId().equals( user.getId() ) ) {
             br.rejectValue( "mobile", "Duplicate.user.mobile" );
         }
@@ -252,7 +255,7 @@ public class UserController {
                     @PathVariable( "user_id" ) Integer userId ) {
         ModelAndView mav = new ModelAndView( "admin/edit_user" );
         User currentUser = WebConfig.getUserInSession( session );
-        User user = userService.find( userId );
+        User user = userService.findOne( userId );
         if ( user != null ) {
             if ( ( currentUser.getRole() != UserRole.SuperAdmin )
                 && ( user.getRole() == UserRole.SuperAdmin ) ) {
@@ -274,7 +277,7 @@ public class UserController {
                     HttpSession session ) {
         ModelAndView mav = new ModelAndView( "admin/edit_user" );
         User currentUser = WebConfig.getUserInSession( session );
-        User existUser = userService.find( userId );
+        User existUser = userService.findOne( userId );
         if ( existUser == null ) {
             mav.setViewName( "redirect:/404.html" );
         } else {
@@ -294,7 +297,8 @@ public class UserController {
                 br.rejectValue( "role", "user.cannot.change.others.role" );
             }
             if ( !br.hasErrors() ) {
-                User duplicate = jpaUtil.findUniqueBy( User.class, "mobile", user.getMobile() );
+                User duplicate = userService
+                    .findOne( EntitySpecification.field( "mobile", user.getMobile() ) );
                 if ( ( duplicate != null ) && !duplicate.getId().equals( userId ) ) {
                     br.rejectValue( "mobile", "Duplicate.user.mobile" );
                 }
@@ -308,7 +312,7 @@ public class UserController {
                     existUser.setStatus( user.getStatus() );
                     existUser.setDeviceToken( user.getDeviceToken() );
                     existUser.setUpdateTime( new Date() );
-                    userService.update( existUser );
+                    userService.save( existUser );
                     mav.addObject( WebConfig.WEB_PAGE_MESSAGE,
                         messageSource.getMessage( "operation.success", null, null ) );
                 } catch (Exception e) {
@@ -327,7 +331,7 @@ public class UserController {
                     HttpSession session ) {
         ModelAndView mav = new ModelAndView( "redirect:" + Route.BG_USERS );
         User me = WebConfig.getUserInSession( session );
-        User user = userService.find( userId );
+        User user = userService.findOne( userId );
         if ( user == null ) {
             mav.setViewName( "redirect:/404.html" );
         } else {
@@ -342,7 +346,7 @@ public class UserController {
                 mav.addObject( "user", user );
                 mav.setViewName( "admin/edit_user" );
             } else {
-                userService.deleteById( userId );
+                userService.delete( userId );
             }
         }
         return mav;
@@ -355,7 +359,7 @@ public class UserController {
                     HttpSession session ) {
         ModelAndView mav = new ModelAndView( "admin/change_user_pwd" );
         User currentUser = WebConfig.getUserInSession( session );
-        User user = userService.find( userId );
+        User user = userService.findOne( userId );
         if ( user == null ) {
             mav.setViewName( "redirect:/404.html" );
         } else if ( ( user.getRole() != UserRole.MobileUser )
@@ -377,7 +381,7 @@ public class UserController {
                     HttpSession session ) {
         ModelAndView mav = new ModelAndView( "admin/change_user_pwd" );
         User currentUser = WebConfig.getUserInSession( session );
-        User localUser = userService.find( userId );
+        User localUser = userService.findOne( userId );
         if ( localUser == null ) {
             mav.setViewName( "redirect:/404.html" );
         } else if ( ( localUser.getRole() != UserRole.MobileUser )
@@ -389,7 +393,7 @@ public class UserController {
         } else {
             localUser.setPassword( user.getPassword() );
             localUser.setUpdateTime( new Date() );
-            userService.update( localUser );
+            userService.save( localUser );
             mav.addObject( "user", localUser );
             mav.addObject( WebConfig.WEB_PAGE_MESSAGE,
                 messageSource.getMessage( "operation.success", null, null ) );
