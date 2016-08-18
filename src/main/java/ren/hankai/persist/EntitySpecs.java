@@ -22,7 +22,7 @@ import ren.hankai.persist.model.User;
  * @version 1.0
  * @since Aug 18, 2016 10:53:02 AM
  */
-public abstract class EntitySpecification {
+public abstract class EntitySpecs {
 
     /**
      * 单字段查询条件

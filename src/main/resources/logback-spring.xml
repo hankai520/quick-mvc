@@ -12,7 +12,7 @@
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
-    <logger name="com.my.app">
+    <logger name="ren.hankai" level="WARN">
         <appender-ref ref="app-file" />
     </logger>
 </configuration>

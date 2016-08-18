@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2016 hankai.ren, All rights reserved.
+ *
+ * http://www.hankai.ren
+ */
 
 package ren.hankai.config.database;
 
@@ -12,29 +17,28 @@ import javax.sql.DataSource;
 import ren.hankai.Preferences;
 
 /**
- * HSQL 数据库配置类
+ * HSQL 内存数据库配置
  *
  * @author hankai
  * @version 1.0
- * @since Jul 14, 2015 12:38:04 PM
+ * @since Aug 18, 2016 3:22:49 PM
  */
-@Profile( { Preferences.PROFILE_TEST, Preferences.PROFILE_HSQL } )
+@Profile( Preferences.PROFILE_TEST )
 @Configuration
-public class HsqlInMemoryConfig extends JpaCustomConfiguration {
+public class HsqlInmemoryConfig {
 
-    static {
-        DB_PLATFORM = HSQLPlatform.class.getName();
-        ENTITY_BASE_PACKAGE = new String[] { "ren.hankai" };
-    }
-
-    @Override
     @Bean
-    public DataSource getDataSource() {
+    public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName( "org.hsqldb.jdbcDriver" );
         ds.setUrl( "jdbc:hsqldb:mem:ut-db" );
         ds.setUsername( "sa" );
         ds.setPassword( null );
         return ds;
+    }
+
+    @Bean
+    public DataSourceInfo dataSourceInfo() {
+        return new DataSourceInfo( HSQLPlatform.class.getName(), "ren.hankai" );
     }
 }

@@ -19,17 +19,9 @@ public class Preferences {
      */
     public static final String PROFILE_TEST       = "test";
     /**
-     * 开发 运行时配置，启用后所有添加了 @profile(Bootstrap.PROFILE_DEVELOP) 标记的配置将被加载。
-     */
-    public static final String PROFILE_DEVELOP    = "dev";
-    /**
      * 调试运行时配置，启用后所有添加了 @profile(Bootstrap.PROFILE_PRODUCTION) 标记的配置将被加载。
      */
     public static final String PROFILE_PRODUCTION = "prod";
-    /**
-     * 启用 H2 数据库
-     */
-    public static final String PROFILE_H2         = "h2";
     /**
      * 启用 HSQL 数据库
      */

@@ -26,7 +26,6 @@ public class ApplicationInitializer {
      * 默认配置文件，原始文件将从程序包中被复制到程序数据目录
      */
     private static String[]     files  = {
-        "h2.properties",
         "hsql.properties",
         "mysql.properties",
         "oracle.properties",

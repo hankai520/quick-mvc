@@ -34,7 +34,7 @@ import ren.hankai.web.interceptor.ApiRequestInterceptor;
 @SpringApplicationConfiguration(
     classes = Application.class )
 @WebIntegrationTest
-@ActiveProfiles( Preferences.PROFILE_TEST )
+@ActiveProfiles( { Preferences.PROFILE_TEST } )
 public abstract class ApplicationTests {
 
     @Autowired

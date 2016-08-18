@@ -1,8 +1,6 @@
 
 package ren.hankai.web.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -29,9 +27,9 @@ import javax.validation.Valid;
 
 import ren.hankai.config.Route;
 import ren.hankai.config.WebConfig;
-import ren.hankai.persist.EntitySpecification;
+import ren.hankai.persist.EntitySpecs;
 import ren.hankai.persist.UserService;
-import ren.hankai.persist.UserSpecification;
+import ren.hankai.persist.UserSpecs;
 import ren.hankai.persist.model.User;
 import ren.hankai.persist.model.UserRole;
 import ren.hankai.persist.model.UserStatus;
@@ -47,13 +45,12 @@ import ren.hankai.web.payload.UserViewModel;
  * @since Mar 28, 2016 2:22:51 PM
  */
 @Controller
-public class UserController {
+public class UserController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger( UserController.class );
     @Autowired
-    private MessageSource       messageSource;
+    private MessageSource messageSource;
     @Autowired
-    private UserService         userService;
+    private UserService   userService;
 
     private void rememberUserViaCookie( UserViewModel user, HttpServletResponse response ) {
         Cookie cookie = new Cookie( WebConfig.COOKIE_KEY_LOGIN_ID, user.getLoginId() );
@@ -119,7 +116,7 @@ public class UserController {
         } else {
             if ( !br.hasErrors() ) {
                 User localUser = userService
-                    .findOne( EntitySpecification.field( "mobile", user.getLoginId() ) );
+                    .findOne( EntitySpecs.field( "mobile", user.getLoginId() ) );
                 if ( localUser == null ) {
                     br.rejectValue( "loginId", "admin.login.account.not.found" );
                 } else if ( !user.getPassword().equalsIgnoreCase( localUser.getPassword() ) ) {
@@ -190,7 +187,7 @@ public class UserController {
             boolean asc = "asc".equalsIgnoreCase( order );
             Pageable pageable = PageUtil.pageWithOffsetAndCount( offset, limit, sort, asc );
             Page<User> result = userService
-                .findAll( UserSpecification.bgSearch( currentUser, null, search ), pageable );
+                .findAll( UserSpecs.bgSearch( currentUser, null, search ), pageable );
             if ( ( result != null ) && result.hasContent() ) {
                 for ( User u : result.getContent() ) {
                     u.setStatusName(
@@ -225,7 +222,7 @@ public class UserController {
                     BindingResult br ) {
         ModelAndView mav = new ModelAndView( "admin/add_user" );
         User duplicate = userService
-            .findOne( EntitySpecification.field( "mobile", user.getMobile() ) );
+            .findOne( EntitySpecs.field( "mobile", user.getMobile() ) );
         if ( ( duplicate != null ) && !duplicate.getId().equals( user.getId() ) ) {
             br.rejectValue( "mobile", "Duplicate.user.mobile" );
         }
@@ -298,7 +295,7 @@ public class UserController {
             }
             if ( !br.hasErrors() ) {
                 User duplicate = userService
-                    .findOne( EntitySpecification.field( "mobile", user.getMobile() ) );
+                    .findOne( EntitySpecs.field( "mobile", user.getMobile() ) );
                 if ( ( duplicate != null ) && !duplicate.getId().equals( userId ) ) {
                     br.rejectValue( "mobile", "Duplicate.user.mobile" );
                 }

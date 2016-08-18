@@ -24,9 +24,9 @@ import ren.hankai.persist.model.UserRole;
  * @version 1.0
  * @since Aug 18, 2016 10:35:45 AM
  */
-public class UserSpecification extends EntitySpecification {
+public class UserSpecs extends EntitySpecs {
 
-    private UserSpecification() {
+    private UserSpecs() {
     }
 
     /**
