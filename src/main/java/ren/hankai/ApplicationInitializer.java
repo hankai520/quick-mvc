@@ -103,7 +103,8 @@ public class ApplicationInitializer {
         logger.info( String.format( "Application home is: \"%s\"", Preferences.getHomeDir() ) );
         String[] subDirs = {
             Preferences.getConfigDir(), Preferences.getDataDir(), Preferences.getCacheDir(),
-            Preferences.getLogDir(), Preferences.getTempDir(), Preferences.getAttachmentDir() };
+            Preferences.getLogDir(), Preferences.getTempDir(), Preferences.getAttachmentDir(),
+            Preferences.getBackupDir() };
         for ( String dir : subDirs ) {
             File file = new File( dir );
             if ( !file.exists() ) {

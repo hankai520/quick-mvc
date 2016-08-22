@@ -6,7 +6,11 @@
 
 package ren.hankai.persist.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.util.Date;
+
+import ren.hankai.web.util.DateTimeSerializer;
 
 /**
  * 数据库备份信息
@@ -17,10 +21,10 @@ import java.util.Date;
  */
 public class DbBackup {
 
-    private String  localPath; // 本地备份文件路径
-    private Integer fileSize;  // 本地备份文件大小
-    private Date    timestamp; // 文件创建时间
-    private String  checksum;  // 文件校验和(SHA1)
+    private String localPath; // 本地备份文件路径
+    private Long   fileSize;  // 本地备份文件大小
+    private Date   timestamp; // 文件创建时间
+    private String checksum;  // 文件校验和(SHA1)
 
     public String getLocalPath() {
         return localPath;
@@ -30,14 +34,16 @@ public class DbBackup {
         this.localPath = localPath;
     }
 
-    public Integer getFileSize() {
+    public Long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize( Integer fileSize ) {
+    public void setFileSize( Long fileSize ) {
         this.fileSize = fileSize;
     }
 
+    @JsonSerialize(
+        using = DateTimeSerializer.class )
     public Date getTimestamp() {
         return timestamp;
     }

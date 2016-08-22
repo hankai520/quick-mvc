@@ -150,4 +150,15 @@ public class Preferences {
     public static String getAttachmentDir() {
         return getDataDir() + File.separator + "attachment";
     }
+
+    /**
+     * 获取程序数据备份目录
+     * 
+     * @return
+     * @author hankai
+     * @since Aug 18, 2016 5:09:38 PM
+     */
+    public static String getBackupDir() {
+        return getDataDir() + File.separator + "backups";
+    }
 }

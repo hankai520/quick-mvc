@@ -92,6 +92,9 @@
                 <a href="/admin/users"><span class="glyphicon glyphicon-user"></span>用户管理</a>
             </li>
             <li role="presentation" class="divider"></li>
+            <li id="miBackups">
+                <a href="/admin/db_backups"><span class="glyphicon glyphicon-time"></span>数据备份</a>
+            </li>
             <li id="miSettings">
                 <a href="/admin/settings"><span class="glyphicon glyphicon-cog"></span>系统信息</a>
             </li>

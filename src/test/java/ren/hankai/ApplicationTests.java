@@ -17,6 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
 
+import ren.hankai.persist.BackupService;
 import ren.hankai.persist.UserService;
 import ren.hankai.persist.model.User;
 import ren.hankai.persist.model.UserRole;
@@ -46,6 +47,8 @@ public abstract class ApplicationTests {
     protected ApiRequestInterceptor apiRequestInterceptor;
     @Autowired
     protected UserService           userService;
+    @Autowired
+    protected BackupService         backupService;
     static {
         ApplicationInitializer.initialize();
     }
