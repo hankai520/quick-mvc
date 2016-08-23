@@ -17,7 +17,6 @@ fi
 ARGS="--server.address=$TCP_LISTEN --server.port=$TCP_PORT $EXTRA_ARGS"
 
 export HOME_DIR=$PRGDIR/data
-
 # Better OS/400 detection: see Bugzilla 31132
 os400=false
 case "`uname`" in
@@ -48,7 +47,7 @@ start)
     echo 'Old process '$pid' has been killed.'
   fi
   echo 'Starting application...'
-  CMD="nohup java -jar ""$PRGDIR"/"$EXECUTABLE $ARGS"
+  CMD="nohup $JAVA_EXEC -jar ""$PRGDIR"/"$EXECUTABLE $ARGS"
   exec $CMD >/dev/null 2>&1&
   
   echo $!>$PIDFILE
