@@ -1,3 +1,38 @@
+工程简介
+========
+
+这是一个基于 spring-boot, spring-mvc, spring-data
+及其他spring框架构建的web开发工程模板，旨在为web开发人员搭建一个可以快速进行web开发的基础工程，提供一些常用功能及配置和前端页面模板（网站后台风格）。
+
+ 
+
+目录结构
+--------
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gradle/wrapper  -- gradle 包装器（用于在没有gradle环境的机器上构建gradle环境）
+libs            -- 第三方 jar 文件（需要通过此种方式引入没有发布到公网的jar包）
+src             -- 工程源代码
+.gitignore      -- git 忽略配置
+README.md       -- markdown 格式的readme文档
+build.gradle    -- gradle 的build配置
+gradlew         -- 适用于 linux 的 gradle 包装器执行脚本
+gradlew.bat     -- 适用于 windows 的 gradle 包装器执行脚本
+package.sh      -- 适用于 linux 的程序打包脚本（生成的发行包将在 dist 目录）
+package.bat     -- 适用于 windows 的程序打包脚本（生成的发行包将在 dist 目录）
+scripts/run.bat -- 适用于 windows 的程序启动脚本
+scripts/run.sh      -- 适用于 linux 的程序启动脚本
+scripts/setenv.bat  -- 适用于 windows 的环境变量设置脚本
+scripts/setenv.sh   -- 适用于 linux 的环境变量设置脚本
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+
+源码结构
+--------
+
+ 
+
 本接口程序被设计用来支撑移动客户端部分功能，所有API均为 http web
 service，数据交换格式为JSON。
 
