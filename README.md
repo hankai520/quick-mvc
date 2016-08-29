@@ -12,18 +12,18 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 gradle/wrapper  -- gradle 包装器（用于在没有gradle环境的机器上构建gradle环境）
 libs            -- 第三方 jar 文件（需要通过此种方式引入没有发布到公网的jar包）
+scripts/run.bat -- 适用于 windows 的程序启动脚本
+scripts/run.sh      -- 适用于 linux 的程序启动脚本
+scripts/setenv.bat  -- 适用于 windows 的环境变量设置脚本
+scripts/setenv.sh   -- 适用于 linux 的环境变量设置脚本
 src             -- 工程源代码
 .gitignore      -- git 忽略配置
 README.md       -- markdown 格式的readme文档
 build.gradle    -- gradle 的build配置
 gradlew         -- 适用于 linux 的 gradle 包装器执行脚本
 gradlew.bat     -- 适用于 windows 的 gradle 包装器执行脚本
-package.sh      -- 适用于 linux 的程序打包脚本（生成的发行包将在 dist 目录）
 package.bat     -- 适用于 windows 的程序打包脚本（生成的发行包将在 dist 目录）
-scripts/run.bat -- 适用于 windows 的程序启动脚本
-scripts/run.sh      -- 适用于 linux 的程序启动脚本
-scripts/setenv.bat  -- 适用于 windows 的环境变量设置脚本
-scripts/setenv.sh   -- 适用于 linux 的环境变量设置脚本
+package.sh      -- 适用于 linux 的程序打包脚本（生成的发行包将在 dist 目录）
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  
@@ -31,7 +31,47 @@ scripts/setenv.sh   -- 适用于 linux 的环境变量设置脚本
 源码结构
 --------
 
- 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/main/java
+    - ren.hankai  //根包，包含程序入口、初始化、运行时配置等
+    - ren.hankai.config  //Spring 配置类
+    - ren.hankai.config.database  //数据库相关配置类
+    - ren.hankai.config.tomcat  //内嵌的 tomcat 配置类
+    - ren.hankai.persist  //持久化类
+    - ren.hankai.persist.model  //持久化所涉及的数据模型
+    - ren.hankai.persist.util  //持久化辅助类
+    - ren.hankai.util  //助手类
+    - ren.hankai.web.controller  //web 控制器
+    - ren.hankai.web.interceptor  //web 请求拦截器
+    - ren.hankai.web.payload  //web 请求及相应数据模型
+    - ren.hankai.web.service  //web 服务
+    - ren.hankai.web.util  //web 相关助手类
+src/main/resources
+    - support  //预生成的程序配置文件
+    - templates  //模板文件根目录
+    - static  //静态 web 资源，其子目录将被直接映射到web根地址
+    - application.properties  //spring核心配置文件
+    - banner.txt  //命令行横幅（用于介绍程序信息）
+    - data-hsql.sql  //HSQLDB 数据初始化 SQL 脚本
+    - data-mysql.sql  //MySQL 数据初始化 SQL 脚本
+    - data-oracle.sql  //Oracle 数据初始化 SQL 脚本
+    - logback-spring.xml  //Spring 內建的日志配置文件
+    - schema-hsql.sql  //HSQLDB 建库建表 SQL 脚本
+    - schema-mysql.sql  //MySQL 建库建表 SQL 脚本
+    - schema-oracle.sql  //Oracle 建库建表 SQL 脚本
+src/main/webapp
+    - WEB-INF/i18n  //国际化字符串文件根目录
+    - WEB-INF/tags  //jsp 模板页面根目录
+    - WEB-INF/views  //jsp 视图根页面
+    - WEB-INF/web.xml  //web 程序描述文件（可忽略，因为使用了内嵌的 Tomcat）
+src/test/java
+    - ren.hankai  //测试入口类、JUNIT和Spring相关配置
+    - ren.hankai.config.database  //用于测试的数据库配置类
+    - ren.hankai.persist  //持久化类的测试
+    - ren.hankai.web.service  //web 服务的测试
+src/test/resources
+    - application-test.properties  //用于单元测试的 spring 核心配置
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 本接口程序被设计用来支撑移动客户端部分功能，所有API均为 http web
 service，数据交换格式为JSON。
