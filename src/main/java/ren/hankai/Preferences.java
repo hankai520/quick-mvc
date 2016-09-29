@@ -46,7 +46,7 @@ public class Preferences {
     /**
      * 程序默认数据根目录（此默认名称用于提示开发者环境变量缺失）
      */
-    public static final String DEFUALT_HOME       = "home-not-set";
+    public static String       appHome            = null;
 
     /**
      * 获取程序数据根目录
@@ -55,14 +55,26 @@ public class Preferences {
      * @since Jul 28, 2015 10:51:49 AM
      */
     public static String getHomeDir() {
-        String homeDir = System.getenv( ENV_APP_HOME_DIR );
-        if ( !StringUtils.isEmpty( homeDir ) ) {
-            if ( homeDir.endsWith( File.separator ) ) {
-                return homeDir.substring( 0, homeDir.length() );
+        if ( appHome == null ) {
+            // 检查系统变量
+            String home = System.getProperty( ENV_APP_HOME_DIR );
+            if ( !StringUtils.isEmpty( home ) ) {
+                appHome = home;
+            } else {
+                // 检查环境变量
+                home = System.getenv( ENV_APP_HOME_DIR );
+                if ( !StringUtils.isEmpty( home ) ) {
+                    appHome = home;
+                } else {
+                    appHome = "home";
+                }
             }
-            return homeDir;
+            if ( appHome.endsWith( File.separator ) ) {
+                appHome = appHome.substring( 0, appHome.length() );
+            }
         }
-        return DEFUALT_HOME;
+        System.setProperty( ENV_APP_HOME_DIR, appHome );
+        return appHome;
     }
 
     /**
@@ -153,7 +165,7 @@ public class Preferences {
 
     /**
      * 获取程序数据备份目录
-     * 
+     *
      * @return
      * @author hankai
      * @since Aug 18, 2016 5:09:38 PM
