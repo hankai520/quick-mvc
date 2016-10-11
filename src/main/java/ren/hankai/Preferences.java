@@ -56,24 +56,27 @@ public class Preferences {
      */
     public static String getHomeDir() {
         if ( appHome == null ) {
-            // 检查系统变量
+            // 优先检查 JVM 环境变量
             String home = System.getProperty( ENV_APP_HOME_DIR );
             if ( !StringUtils.isEmpty( home ) ) {
                 appHome = home;
             } else {
-                // 检查环境变量
+                // 检查系统环境变量
                 home = System.getenv( ENV_APP_HOME_DIR );
                 if ( !StringUtils.isEmpty( home ) ) {
                     appHome = home;
-                } else {
-                    appHome = "home";
                 }
             }
-            if ( appHome.endsWith( File.separator ) ) {
-                appHome = appHome.substring( 0, appHome.length() );
+            if ( !StringUtils.isEmpty( home ) ) {
+                if ( home.endsWith( File.separator ) ) {
+                    appHome = home.substring( 0, home.length() );
+                }
+                appHome = home;
+            } else {
+                appHome = System.getProperty( "user.dir" ) + File.separator + "home-not-set";
             }
+            System.setProperty( ENV_APP_HOME_DIR, appHome );
         }
-        System.setProperty( ENV_APP_HOME_DIR, appHome );
         return appHome;
     }
 
