@@ -18,26 +18,24 @@ import ren.hankai.web.util.DateTimeSerializer;
  */
 public class ApiTokenInfo {
 
-    private Integer uid;
-    private Date    expiryTime;
+  private Integer uid;
+  private Date expiryTime;
 
-    public Integer getUid() {
-        return uid;
-    }
+  public Integer getUid() {
+    return uid;
+  }
 
-    public void setUid( Integer uid ) {
-        this.uid = uid;
-    }
+  public void setUid(Integer uid) {
+    this.uid = uid;
+  }
 
-    @JsonSerialize(
-        using = DateTimeSerializer.class )
-    public Date getExpiryTime() {
-        return expiryTime;
-    }
+  @JsonSerialize(using = DateTimeSerializer.class)
+  public Date getExpiryTime() {
+    return expiryTime;
+  }
 
-    @JsonDeserialize(
-        using = DateTimeDeserializer.class )
-    public void setExpiryTime( Date expiryTime ) {
-        this.expiryTime = expiryTime;
-    }
+  @JsonDeserialize(using = DateTimeDeserializer.class)
+  public void setExpiryTime(Date expiryTime) {
+    this.expiryTime = expiryTime;
+  }
 }

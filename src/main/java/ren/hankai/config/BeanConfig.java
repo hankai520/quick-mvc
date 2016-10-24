@@ -25,61 +25,59 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class BeanConfig {
 
-    /**
-     * 国际化字符串
-     *
-     * @return MessageSource的实现类
-     * @author hankai
-     * @since Jun 21, 2016 12:56:51 PM
-     */
-    @Bean(
-        name = "messageSource" )
-    public ReloadableResourceBundleMessageSource getMessageSource() {
-        ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
-        ms.setBasenames( "WEB-INF/i18n/messages", "WEB-INF/i18n/validation" );
-        ms.setDefaultEncoding( "UTF-8" );
-        ms.setCacheSeconds( 0 );
-        ms.setFallbackToSystemLocale( false );
-        ms.setUseCodeAsDefaultMessage( true );
-        return ms;
-    }
+  /**
+   * 国际化字符串
+   *
+   * @return MessageSource的实现类
+   * @author hankai
+   * @since Jun 21, 2016 12:56:51 PM
+   */
+  @Bean(name = "messageSource")
+  public ReloadableResourceBundleMessageSource getMessageSource() {
+    ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
+    ms.setBasenames("WEB-INF/i18n/messages", "WEB-INF/i18n/validation");
+    ms.setDefaultEncoding("UTF-8");
+    ms.setCacheSeconds(0);
+    ms.setFallbackToSystemLocale(false);
+    ms.setUseCodeAsDefaultMessage(true);
+    return ms;
+  }
 
-    /**
-     * JSON 序列化/反序列化支持
-     *
-     * @return
-     * @author hankai
-     * @since Jun 21, 2016 12:57:28 PM
-     */
-    @Bean
-    public ObjectMapper getObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion( Include.NON_NULL );
-        return objectMapper;
-    }
+  /**
+   * JSON 序列化/反序列化支持
+   *
+   * @return
+   * @author hankai
+   * @since Jun 21, 2016 12:57:28 PM
+   */
+  @Bean
+  public ObjectMapper getObjectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.setSerializationInclusion(Include.NON_NULL);
+    return objectMapper;
+  }
 
-    /**
-     * 用于调用 RESTful 风格的 API
-     *
-     * @param jacksonCvt JSON消息转换器
-     * @return
-     * @author hankai
-     * @since Jun 21, 2016 12:58:14 PM
-     */
-    @Bean
-    public RestTemplate getRestTemplate( MappingJackson2HttpMessageConverter jacksonCvt ) {
-        HttpComponentsClientHttpRequestFactory factory =
-                                                       new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectTimeout( 1000 * 10 );// 10s
-        factory.setReadTimeout( 1000 * 30 );// 30s
-        RestTemplate restTemplate = new RestTemplate( factory );
-        restTemplate.getMessageConverters().add( new StringHttpMessageConverter() );
-        restTemplate.getMessageConverters().add( new ResourceHttpMessageConverter() );
-        restTemplate.getMessageConverters().add( new ByteArrayHttpMessageConverter() );
-        FormHttpMessageConverter fmc = new FormHttpMessageConverter();
-        fmc.addPartConverter( jacksonCvt );
-        restTemplate.getMessageConverters().add( fmc );
-        restTemplate.getMessageConverters().add( jacksonCvt );
-        return restTemplate;
-    }
+  /**
+   * 用于调用 RESTful 风格的 API
+   *
+   * @param jacksonCvt JSON消息转换器
+   * @return
+   * @author hankai
+   * @since Jun 21, 2016 12:58:14 PM
+   */
+  @Bean
+  public RestTemplate getRestTemplate(MappingJackson2HttpMessageConverter jacksonCvt) {
+    HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+    factory.setConnectTimeout(1000 * 10);// 10s
+    factory.setReadTimeout(1000 * 30);// 30s
+    RestTemplate restTemplate = new RestTemplate(factory);
+    restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+    restTemplate.getMessageConverters().add(new ResourceHttpMessageConverter());
+    restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
+    FormHttpMessageConverter fmc = new FormHttpMessageConverter();
+    fmc.addPartConverter(jacksonCvt);
+    restTemplate.getMessageConverters().add(fmc);
+    restTemplate.getMessageConverters().add(jacksonCvt);
+    return restTemplate;
+  }
 }

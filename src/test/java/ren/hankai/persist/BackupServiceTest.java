@@ -23,13 +23,13 @@ import ren.hankai.ApplicationTests;
  */
 public class BackupServiceTest extends ApplicationTests {
 
-    /**
-     * Test method for {@link ren.hankai.persist.BackupService#backupDb()}.
-     */
-    @Test
-    public void testBackupDb() {
-        String path = backupService.backupDb();
-        Assert.assertTrue( !StringUtils.isEmpty( path ) );
-        Assert.assertTrue( new File( path ).exists() );
-    }
+  /**
+   * Test method for {@link ren.hankai.persist.BackupService#backupDb()}.
+   */
+  @Test
+  public void testBackupDb() {
+    String path = backupService.backupDb();
+    Assert.assertTrue(!StringUtils.isEmpty(path));
+    Assert.assertTrue(new File(path).exists());
+  }
 }

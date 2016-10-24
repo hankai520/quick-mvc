@@ -21,42 +21,41 @@ import ren.hankai.web.util.DateTimeSerializer;
  */
 public class DbBackup {
 
-    private String localPath; // 本地备份文件路径
-    private Long   fileSize;  // 本地备份文件大小
-    private Date   timestamp; // 文件创建时间
-    private String checksum;  // 文件校验和(SHA1)
+  private String localPath; // 本地备份文件路径
+  private Long fileSize; // 本地备份文件大小
+  private Date timestamp; // 文件创建时间
+  private String checksum; // 文件校验和(SHA1)
 
-    public String getLocalPath() {
-        return localPath;
-    }
+  public String getLocalPath() {
+    return localPath;
+  }
 
-    public void setLocalPath( String localPath ) {
-        this.localPath = localPath;
-    }
+  public void setLocalPath(String localPath) {
+    this.localPath = localPath;
+  }
 
-    public Long getFileSize() {
-        return fileSize;
-    }
+  public Long getFileSize() {
+    return fileSize;
+  }
 
-    public void setFileSize( Long fileSize ) {
-        this.fileSize = fileSize;
-    }
+  public void setFileSize(Long fileSize) {
+    this.fileSize = fileSize;
+  }
 
-    @JsonSerialize(
-        using = DateTimeSerializer.class )
-    public Date getTimestamp() {
-        return timestamp;
-    }
+  @JsonSerialize(using = DateTimeSerializer.class)
+  public Date getTimestamp() {
+    return timestamp;
+  }
 
-    public void setTimestamp( Date timestamp ) {
-        this.timestamp = timestamp;
-    }
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
 
-    public String getChecksum() {
-        return checksum;
-    }
+  public String getChecksum() {
+    return checksum;
+  }
 
-    public void setChecksum( String checksum ) {
-        this.checksum = checksum;
-    }
+  public void setChecksum(String checksum) {
+    this.checksum = checksum;
+  }
 }

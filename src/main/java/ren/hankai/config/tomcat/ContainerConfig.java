@@ -20,30 +20,30 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContainerConfig implements EmbeddedServletContainerCustomizer {
 
-    @Autowired
-    private ConnectorConfig connectorConfig;
+  @Autowired
+  private ConnectorConfig connectorConfig;
 
-    /*
-     * 自定义 tomcat container 配置，例如自定义错误页面，自定义转发的头消息
-     * @see
-     * org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer#customize(org.
-     * springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer)
-     */
-    @Override
-    public void customize( ConfigurableEmbeddedServletContainer container ) {
-        container.addErrorPages( new ErrorPage( HttpStatus.BAD_REQUEST, "/400.html" ) );
-        container.addErrorPages( new ErrorPage( HttpStatus.FORBIDDEN, "/403.html" ) );
-        container.addErrorPages( new ErrorPage( HttpStatus.NOT_FOUND, "/404.html" ) );
-        container.addErrorPages( new ErrorPage( HttpStatus.INTERNAL_SERVER_ERROR, "/500.html" ) );
-        if ( container instanceof TomcatEmbeddedServletContainerFactory ) {
-            TomcatEmbeddedServletContainerFactory cf =
-                                                     (TomcatEmbeddedServletContainerFactory) container;
-            cf.addConnectorCustomizers( connectorConfig );
-            RemoteIpValve riv = new RemoteIpValve();
-            riv.setRemoteIpHeader( "x-forwarded-for" );
-            riv.setProxiesHeader( "x-forwarded-by" );
-            riv.setProtocolHeader( "x-forwarded-proto" );
-            cf.addContextValves( riv );
-        }
+  /*
+   * 自定义 tomcat container 配置，例如自定义错误页面，自定义转发的头消息
+   * 
+   * @see
+   * org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer#customize(org.
+   * springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer)
+   */
+  @Override
+  public void customize(ConfigurableEmbeddedServletContainer container) {
+    container.addErrorPages(new ErrorPage(HttpStatus.BAD_REQUEST, "/400.html"));
+    container.addErrorPages(new ErrorPage(HttpStatus.FORBIDDEN, "/403.html"));
+    container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/404.html"));
+    container.addErrorPages(new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500.html"));
+    if (container instanceof TomcatEmbeddedServletContainerFactory) {
+      TomcatEmbeddedServletContainerFactory cf = (TomcatEmbeddedServletContainerFactory) container;
+      cf.addConnectorCustomizers(connectorConfig);
+      RemoteIpValve riv = new RemoteIpValve();
+      riv.setRemoteIpHeader("x-forwarded-for");
+      riv.setProxiesHeader("x-forwarded-by");
+      riv.setProtocolHeader("x-forwarded-proto");
+      cf.addContextValves(riv);
     }
+  }
 }

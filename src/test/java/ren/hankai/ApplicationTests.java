@@ -31,51 +31,50 @@ import ren.hankai.web.interceptor.ApiRequestInterceptor;
  * @version 1.0.0
  * @since Jun 21, 2016 1:29:53 PM
  */
-@RunWith( SpringJUnit4ClassRunner.class )
-@SpringApplicationConfiguration(
-    classes = Application.class )
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
 @WebIntegrationTest
-@ActiveProfiles( { Preferences.PROFILE_TEST } )
+@ActiveProfiles({Preferences.PROFILE_TEST})
 public abstract class ApplicationTests {
 
-    @Autowired
-    protected WebApplicationContext ctx;
-    protected MockMvc               mockMvc;
-    @Autowired
-    protected ObjectMapper          objectMapper;
-    @Autowired
-    protected ApiRequestInterceptor apiRequestInterceptor;
-    @Autowired
-    protected UserService           userService;
-    @Autowired
-    protected BackupService         backupService;
-    static {
-        ApplicationInitializer.initialize();
-    }
-    protected User testUser;
+  @Autowired
+  protected WebApplicationContext ctx;
+  protected MockMvc mockMvc;
+  @Autowired
+  protected ObjectMapper objectMapper;
+  @Autowired
+  protected ApiRequestInterceptor apiRequestInterceptor;
+  @Autowired
+  protected UserService userService;
+  @Autowired
+  protected BackupService backupService;
+  static {
+    ApplicationInitializer.initialize();
+  }
+  protected User testUser;
 
-    /**
-     * 初始化 spring mvc 测试环境，清空数据库记录。
-     *
-     * @author hankai
-     * @since Jun 21, 2016 1:35:39 PM
-     */
-    @Before
-    public void setUpMVC() {
-        mockMvc = MockMvcBuilders.webAppContextSetup( ctx ).build();
-        userService.deleteAllInBatch();
-        initTestFixures();
-    }
+  /**
+   * 初始化 spring mvc 测试环境，清空数据库记录。
+   *
+   * @author hankai
+   * @since Jun 21, 2016 1:35:39 PM
+   */
+  @Before
+  public void setUpMVC() {
+    mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
+    userService.deleteAllInBatch();
+    initTestFixures();
+  }
 
-    private void initTestFixures() {
-        if ( testUser == null ) {
-            testUser = new User();
-            testUser.setCreateTime( new Date() );
-            testUser.setMobile( "111" );
-            testUser.setPassword( DigestUtils.md5Hex( "123" ) );
-            testUser.setRole( UserRole.MobileUser );
-            testUser.setStatus( UserStatus.Enabled );
-            userService.save( testUser );
-        }
+  private void initTestFixures() {
+    if (testUser == null) {
+      testUser = new User();
+      testUser.setCreateTime(new Date());
+      testUser.setMobile("111");
+      testUser.setPassword(DigestUtils.md5Hex("123"));
+      testUser.setRole(UserRole.MobileUser);
+      testUser.setStatus(UserStatus.Enabled);
+      userService.save(testUser);
     }
+  }
 }

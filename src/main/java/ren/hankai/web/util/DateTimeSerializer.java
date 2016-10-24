@@ -21,10 +21,10 @@ import ren.hankai.config.WebConfig;
  */
 public class DateTimeSerializer extends JsonSerializer<Date> {
 
-    @Override
-    public void serialize( Date value, JsonGenerator jgen, SerializerProvider provider )
-                    throws IOException, JsonProcessingException {
-        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat( WebConfig.DATE_TIME_FORMAT );
-        jgen.writeString( dateTimeFormatter.format( value ) );
-    }
+  @Override
+  public void serialize(Date value, JsonGenerator jgen, SerializerProvider provider)
+      throws IOException, JsonProcessingException {
+    SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(WebConfig.DATE_TIME_FORMAT);
+    jgen.writeString(dateTimeFormatter.format(value));
+  }
 }

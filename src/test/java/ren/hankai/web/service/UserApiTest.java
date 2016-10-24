@@ -41,59 +41,48 @@ import ren.hankai.web.payload.ApiTokenInfo;
  */
 public class UserApiTest extends ApplicationTests {
 
-    @SuppressWarnings( "unchecked" )
-    @Test
-    public void testLogin() throws Exception {
-        Map<String, String> params = new HashMap<>();
-        params.put( "login_id", testUser.getMobile() );
-        params.put( "password", testUser.getPassword() );
-        params.put( "device_token", "test token" );
-        String sign = apiRequestInterceptor.generateSign( params );
-        MvcResult result = mockMvc.perform(
-            post( Route.API_LOGIN )
-                .contentType( MediaType.APPLICATION_FORM_URLENCODED )
-                .param( WebConfig.API_REQUEST_SIGN, sign )
-                .param( "login_id", params.get( "login_id" ) )
-                .param( "password", params.get( "password" ) )
-                .param( "device_token", params.get( "device_token" ) ) )
-            .andExpect( status().isOk() )
-            .andExpect( jsonPath( "$.code", is( ApiCode.Success.value() ) ) )
-            .andExpect( jsonPath( "$.body.success", is( true ) ) )
-            .andExpect( jsonPath( "$.body.data", notNullValue() ) )
-            .andDo( print() )
-            .andReturn();
-        ApiResponse response = objectMapper.readValue( result.getResponse().getContentAsString(),
-            ApiResponse.class );
-        Map<String, Object> data = (Map<String, Object>) response.getBody().getData();
-        Assert.assertEquals( testUser.getMobile(), data.get( "mobile" ) );
-        Assert.assertEquals( testUser.getId(), data.get( "id" ) );
-        Assert.assertNotNull( data.get( "accessToken" ) );
-        Assert.assertNotNull( data.get( "tokenExpiry" ) );
-    }
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testLogin() throws Exception {
+    Map<String, String> params = new HashMap<>();
+    params.put("login_id", testUser.getMobile());
+    params.put("password", testUser.getPassword());
+    params.put("device_token", "test token");
+    String sign = apiRequestInterceptor.generateSign(params);
+    MvcResult result = mockMvc
+        .perform(post(Route.API_LOGIN).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param(WebConfig.API_REQUEST_SIGN, sign).param("login_id", params.get("login_id"))
+            .param("password", params.get("password"))
+            .param("device_token", params.get("device_token")))
+        .andExpect(status().isOk()).andExpect(jsonPath("$.code", is(ApiCode.Success.value())))
+        .andExpect(jsonPath("$.body.success", is(true)))
+        .andExpect(jsonPath("$.body.data", notNullValue())).andDo(print()).andReturn();
+    ApiResponse response =
+        objectMapper.readValue(result.getResponse().getContentAsString(), ApiResponse.class);
+    Map<String, Object> data = (Map<String, Object>) response.getBody().getData();
+    Assert.assertEquals(testUser.getMobile(), data.get("mobile"));
+    Assert.assertEquals(testUser.getId(), data.get("id"));
+    Assert.assertNotNull(data.get("accessToken"));
+    Assert.assertNotNull(data.get("tokenExpiry"));
+  }
 
-    @Test
-    public void testSample() throws Exception {
-        ApiTokenInfo ati = new ApiTokenInfo();
-        ati.setExpiryTime( DateUtils.addDays( new Date(), 1 ) );
-        ati.setUid( 1 );
-        String token = objectMapper.writeValueAsString( ati );
-        token = EncryptionUtil.aes( token, SystemConfig.getSystemSk(), true );
-        Map<String, String> params = new HashMap<>();
-        params.put( "aaa", "111" );
-        params.put( "bbb", "222" );
-        String sign = apiRequestInterceptor.generateSign( params );
-        mockMvc.perform(
-            post( "/api/sample" )
-                .contentType( MediaType.APPLICATION_FORM_URLENCODED )
-                .param( WebConfig.API_ACCESS_TOKEN, token )
-                .param( WebConfig.API_REQUEST_SIGN, sign )
-                .param( "aaa", params.get( "aaa" ) )
-                .param( "bbb", params.get( "bbb" ) ) )
-            .andExpect( status().isOk() )
-            .andExpect( jsonPath( "$.code", is( ApiCode.Success.value() ) ) )
-            .andExpect( jsonPath( "$.body.success", is( true ) ) )
-            .andExpect( jsonPath( "$.body.data", notNullValue() ) )
-            .andDo( print() )
-            .andReturn();
-    }
+  @Test
+  public void testSample() throws Exception {
+    ApiTokenInfo ati = new ApiTokenInfo();
+    ati.setExpiryTime(DateUtils.addDays(new Date(), 1));
+    ati.setUid(1);
+    String token = objectMapper.writeValueAsString(ati);
+    token = EncryptionUtil.aes(token, SystemConfig.getSystemSk(), true);
+    Map<String, String> params = new HashMap<>();
+    params.put("aaa", "111");
+    params.put("bbb", "222");
+    String sign = apiRequestInterceptor.generateSign(params);
+    mockMvc
+        .perform(post("/api/sample").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .param(WebConfig.API_ACCESS_TOKEN, token).param(WebConfig.API_REQUEST_SIGN, sign)
+            .param("aaa", params.get("aaa")).param("bbb", params.get("bbb")))
+        .andExpect(status().isOk()).andExpect(jsonPath("$.code", is(ApiCode.Success.value())))
+        .andExpect(jsonPath("$.body.success", is(true)))
+        .andExpect(jsonPath("$.body.data", notNullValue())).andDo(print()).andReturn();
+  }
 }

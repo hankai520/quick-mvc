@@ -28,34 +28,34 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableConfigurationProperties
 public class Application extends SpringBootServletInitializer {
 
-    private static final Logger logger = LoggerFactory.getLogger( Application.class );
+  private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    /**
-     * 当将 war 包作为可执行文件来运行时，通过此入口启动程序
-     *
-     * @param args 命令行参数
-     * @author hankai
-     * @since Jun 21, 2016 12:49:49 PM
-     */
-    public static void main( String[] args ) {
-        // 打印环境变量
-        logger.info( System.getenv().toString() );
-        if ( ApplicationInitializer.initialize() ) {
-            SpringApplication.run( Application.class, args );
-        }
+  /**
+   * 当将 war 包作为可执行文件来运行时，通过此入口启动程序
+   *
+   * @param args 命令行参数
+   * @author hankai
+   * @since Jun 21, 2016 12:49:49 PM
+   */
+  public static void main(String[] args) {
+    // 打印环境变量
+    logger.info(System.getenv().toString());
+    if (ApplicationInitializer.initialize()) {
+      SpringApplication.run(Application.class, args);
     }
+  }
 
-    /*
-     * 通过部署到 servlet 容器来运行程序时，通过此入口启动
-     * (non-Javadoc)
-     * @see org.springframework.boot.context.web.SpringBootServletInitializer#configure(org.
-     * springframework.boot.builder.SpringApplicationBuilder)
-     */
-    @Override
-    protected SpringApplicationBuilder configure( SpringApplicationBuilder application ) {
-        if ( ApplicationInitializer.initialize() ) {
-            return application.sources( Application.class );
-        }
-        return null;
+  /*
+   * 通过部署到 servlet 容器来运行程序时，通过此入口启动 (non-Javadoc)
+   * 
+   * @see org.springframework.boot.context.web.SpringBootServletInitializer#configure(org.
+   * springframework.boot.builder.SpringApplicationBuilder)
+   */
+  @Override
+  protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+    if (ApplicationInitializer.initialize()) {
+      return application.sources(Application.class);
     }
+    return null;
+  }
 }

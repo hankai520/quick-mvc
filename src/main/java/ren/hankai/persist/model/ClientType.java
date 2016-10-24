@@ -1,7 +1,7 @@
 /*
  * Copyright © 2015 Jiangsu Sparknet Software Co., Ltd. All Rights Reserved
  *
- *    http://www.sparksoft.com.cn
+ * http://www.sparksoft.com.cn
  */
 
 package ren.hankai.persist.model;
@@ -17,33 +17,33 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since Jan 12, 2016 1:56:54 PM
  */
 public enum ClientType {
-    /**
-     * iOS
-     */
-    IOS( 1 ),
-    /**
-     * Android
-     */
-    Android( 2 ),;
+  /**
+   * iOS
+   */
+  IOS(1),
+  /**
+   * Android
+   */
+  Android(2),;
 
-    @JsonCreator
-    public static ClientType fromInteger( Integer value ) {
-        if ( value == IOS.value ) {
-            return IOS;
-        } else if ( value == Android.value ) {
-            return Android;
-        }
-        return null;
+  @JsonCreator
+  public static ClientType fromInteger(Integer value) {
+    if (value == IOS.value) {
+      return IOS;
+    } else if (value == Android.value) {
+      return Android;
     }
+    return null;
+  }
 
-    private final int value;
+  private final int value;
 
-    private ClientType( int value ) {
-        this.value = value;
-    }
+  private ClientType(int value) {
+    this.value = value;
+  }
 
-    @JsonValue
-    public int value() {
-        return value;
-    }
+  @JsonValue
+  public int value() {
+    return value;
+  }
 }

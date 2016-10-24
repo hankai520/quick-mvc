@@ -28,69 +28,65 @@ import ren.hankai.persist.model.User;
 @Component
 public class AdministrationInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private UserService   userService;
-    /**
-     * 从应用包中解析版本号
-     */
-    private static String version = null;
+  @Autowired
+  private UserService userService;
+  /**
+   * 从应用包中解析版本号
+   */
+  private static String version = null;
 
-    private void parsePackageVersion( HttpServletRequest request ) {
-        if ( version == null ) {
-            version = getClass().getPackage().getImplementationVersion();
-            if ( version == null ) {
-                Properties prop = new Properties();
-                try {
-                    prop.load(
-                        request.getServletContext()
-                            .getResourceAsStream( "/META-INF/MANIFEST.MF" ) );
-                    version = prop.getProperty( "Implementation-Version" );
-                } catch (Exception e) {
-                }
-            }
+  private void parsePackageVersion(HttpServletRequest request) {
+    if (version == null) {
+      version = getClass().getPackage().getImplementationVersion();
+      if (version == null) {
+        Properties prop = new Properties();
+        try {
+          prop.load(request.getServletContext().getResourceAsStream("/META-INF/MANIFEST.MF"));
+          version = prop.getProperty("Implementation-Version");
+        } catch (Exception e) {
         }
+      }
     }
+  }
 
-    @Override
-    public boolean preHandle( HttpServletRequest request, HttpServletResponse response,
-                    Object handler ) throws Exception {
-        String contextPath = request.getContextPath();
-        String url = request.getRequestURI().substring( contextPath.length() );
-        if ( url.startsWith( "/" ) ) {
-            url = url.substring( 1 );
-        }
-        HttpSession session = request.getSession();
-        // 程序完整版本号
-        parsePackageVersion( request );
-        if ( !StringUtils.isEmpty( version ) ) {
-            session.setAttribute( "version", version );
-        }
-        Object userObj = session.getAttribute( WebConfig.SESSION_KEY_USER );
-        User user = null;
-        if ( ( userObj != null ) && ( userObj instanceof User ) ) {
-            user = (User) userObj;
-            // 更新会话中缓存的用户信息
-            user = userService.findOne( user.getId() );
-            session.setAttribute( WebConfig.SESSION_KEY_USER, user );
-            return true;
-        } else {
-            String fullUrl = url;
-            if ( !StringUtils.isEmpty( request.getQueryString() ) ) {
-                fullUrl += ( "?" + request.getQueryString() );
-            }
-            session.setAttribute( WebConfig.SESSION_KEY_LAST_URL, fullUrl );
-            response.sendRedirect( contextPath + Route.BG_LOGIN );
-        }
-        return false;
+  @Override
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+      throws Exception {
+    String contextPath = request.getContextPath();
+    String url = request.getRequestURI().substring(contextPath.length());
+    if (url.startsWith("/")) {
+      url = url.substring(1);
     }
+    HttpSession session = request.getSession();
+    // 程序完整版本号
+    parsePackageVersion(request);
+    if (!StringUtils.isEmpty(version)) {
+      session.setAttribute("version", version);
+    }
+    Object userObj = session.getAttribute(WebConfig.SESSION_KEY_USER);
+    User user = null;
+    if ((userObj != null) && (userObj instanceof User)) {
+      user = (User) userObj;
+      // 更新会话中缓存的用户信息
+      user = userService.findOne(user.getId());
+      session.setAttribute(WebConfig.SESSION_KEY_USER, user);
+      return true;
+    } else {
+      String fullUrl = url;
+      if (!StringUtils.isEmpty(request.getQueryString())) {
+        fullUrl += ("?" + request.getQueryString());
+      }
+      session.setAttribute(WebConfig.SESSION_KEY_LAST_URL, fullUrl);
+      response.sendRedirect(contextPath + Route.BG_LOGIN);
+    }
+    return false;
+  }
 
-    @Override
-    public void postHandle( HttpServletRequest request, HttpServletResponse response,
-                    Object handler, ModelAndView modelAndView ) throws Exception {
-    }
+  @Override
+  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+      ModelAndView modelAndView) throws Exception {}
 
-    @Override
-    public void afterCompletion( HttpServletRequest request, HttpServletResponse response,
-                    Object handler, Exception ex ) throws Exception {
-    }
+  @Override
+  public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
+      Object handler, Exception ex) throws Exception {}
 }

@@ -12,40 +12,39 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since Jan 7, 2016 4:30:54 PM
  */
 public enum BusinessError {
-    /**
-     * 账号或密码不正确
-     */
-    InvalidAccount( 1 ),
-    /**
-     * 用户角色不正确（例如：非审查员登录）
-     */
-    InvalidRole( 2 ),
-    /**
-     * 账号状态错误
-     */
-    InvalidStatus( 3 ),
-    ;
+  /**
+   * 账号或密码不正确
+   */
+  InvalidAccount(1),
+  /**
+   * 用户角色不正确（例如：非审查员登录）
+   */
+  InvalidRole(2),
+  /**
+   * 账号状态错误
+   */
+  InvalidStatus(3),;
 
-    @JsonCreator
-    public static BusinessError fromInteger( Integer value ) {
-        if ( value == InvalidAccount.value ) {
-            return InvalidAccount;
-        } else if ( value == InvalidRole.value ) {
-            return InvalidRole;
-        } else if ( value == InvalidStatus.value ) {
-            return InvalidStatus;
-        }
-        return null;
+  @JsonCreator
+  public static BusinessError fromInteger(Integer value) {
+    if (value == InvalidAccount.value) {
+      return InvalidAccount;
+    } else if (value == InvalidRole.value) {
+      return InvalidRole;
+    } else if (value == InvalidStatus.value) {
+      return InvalidStatus;
     }
+    return null;
+  }
 
-    private final int value;
+  private final int value;
 
-    private BusinessError( int value ) {
-        this.value = value;
-    }
+  private BusinessError(int value) {
+    this.value = value;
+  }
 
-    @JsonValue
-    public int value() {
-        return value;
-    }
+  @JsonValue
+  public int value() {
+    return value;
+  }
 }

@@ -23,22 +23,22 @@ import ren.hankai.Preferences;
  * @version 1.0
  * @since Aug 18, 2016 3:22:49 PM
  */
-@Profile( Preferences.PROFILE_TEST )
+@Profile(Preferences.PROFILE_TEST)
 @Configuration
 public class HsqlInmemoryConfig {
 
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName( "org.hsqldb.jdbcDriver" );
-        ds.setUrl( "jdbc:hsqldb:mem:ut-db" );
-        ds.setUsername( "sa" );
-        ds.setPassword( null );
-        return ds;
-    }
+  @Bean
+  public DataSource dataSource() {
+    DriverManagerDataSource ds = new DriverManagerDataSource();
+    ds.setDriverClassName("org.hsqldb.jdbcDriver");
+    ds.setUrl("jdbc:hsqldb:mem:ut-db");
+    ds.setUsername("sa");
+    ds.setPassword(null);
+    return ds;
+  }
 
-    @Bean
-    public DataSourceInfo dataSourceInfo() {
-        return new DataSourceInfo( HSQLPlatform.class.getName(), "ren.hankai" );
-    }
+  @Bean
+  public DataSourceInfo dataSourceInfo() {
+    return new DataSourceInfo(HSQLPlatform.class.getName(), "ren.hankai");
+  }
 }

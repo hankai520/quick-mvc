@@ -24,23 +24,22 @@ import ren.hankai.persist.model.User;
  */
 public abstract class EntitySpecs {
 
-    /**
-     * 单字段查询条件
-     *
-     * @param fieldName 字段名称
-     * @param value 字段值
-     * @return 查询条件
-     * @author hankai
-     * @since Aug 18, 2016 10:45:18 AM
-     */
-    public static Specification<User> field( final String fieldName, final Object value ) {
-        return new Specification<User>() {
+  /**
+   * 单字段查询条件
+   *
+   * @param fieldName 字段名称
+   * @param value 字段值
+   * @return 查询条件
+   * @author hankai
+   * @since Aug 18, 2016 10:45:18 AM
+   */
+  public static Specification<User> field(final String fieldName, final Object value) {
+    return new Specification<User>() {
 
-            @Override
-            public Predicate toPredicate( Root<User> root, CriteriaQuery<?> query,
-                            CriteriaBuilder cb ) {
-                return cb.equal( root.get( fieldName ), value );
-            }
-        };
-    }
+      @Override
+      public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        return cb.equal(root.get(fieldName), value);
+      }
+    };
+  }
 }

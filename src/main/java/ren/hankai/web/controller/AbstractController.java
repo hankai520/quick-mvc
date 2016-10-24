@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractController {
 
-    protected static Logger logger = null;
+  protected static Logger logger = null;
 
-    public AbstractController() {
-        logger = LoggerFactory.getLogger( this.getClass() );
-    }
+  public AbstractController() {
+    logger = LoggerFactory.getLogger(this.getClass());
+  }
 }

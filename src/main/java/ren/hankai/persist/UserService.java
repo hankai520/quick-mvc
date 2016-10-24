@@ -24,16 +24,16 @@ import ren.hankai.persist.util.CustomJpaRepository;
 @Transactional
 public interface UserService extends CustomJpaRepository<User>, JpaRepository<User, Integer> {
 
-    /**
-     * 根据手机及密码查询指定用户
-     *
-     * @param mobile 手机号
-     * @param password 密码（密文）
-     * @param role 角色
-     * @return 用户
-     * @author hankai
-     * @since Aug 18, 2016 11:22:03 AM
-     */
-    @Query( "select o from User o where o.mobile=?1 and o.password=?2 and o.role=?3" )
-    User findOne( String mobile, String password, UserRole role );
+  /**
+   * 根据手机及密码查询指定用户
+   *
+   * @param mobile 手机号
+   * @param password 密码（密文）
+   * @param role 角色
+   * @return 用户
+   * @author hankai
+   * @since Aug 18, 2016 11:22:03 AM
+   */
+  @Query("select o from User o where o.mobile=?1 and o.password=?2 and o.role=?3")
+  User findOne(String mobile, String password, UserRole role);
 }

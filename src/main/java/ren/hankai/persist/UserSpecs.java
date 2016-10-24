@@ -26,42 +26,39 @@ import ren.hankai.persist.model.UserRole;
  */
 public class UserSpecs extends EntitySpecs {
 
-    private UserSpecs() {
-    }
+  private UserSpecs() {}
 
-    /**
-     * 后台用户搜索用户的查询条件
-     *
-     * @param currentUser 当前登录的用户
-     * @param targetRole 查询指定角色的用户
-     * @param keyword 查询关键字
-     * @return 查询条件
-     * @author hankai
-     * @since Aug 18, 2016 10:39:50 AM
-     */
-    public static Specification<User> bgSearch( final User currentUser,
-                    final UserRole targetRole,
-                    final String keyword ) {
-        return new Specification<User>() {
+  /**
+   * 后台用户搜索用户的查询条件
+   *
+   * @param currentUser 当前登录的用户
+   * @param targetRole 查询指定角色的用户
+   * @param keyword 查询关键字
+   * @return 查询条件
+   * @author hankai
+   * @since Aug 18, 2016 10:39:50 AM
+   */
+  public static Specification<User> bgSearch(final User currentUser, final UserRole targetRole,
+      final String keyword) {
+    return new Specification<User>() {
 
-            @Override
-            public Predicate toPredicate( Root<User> root, CriteriaQuery<?> query,
-                            CriteriaBuilder cb ) {
-                Predicate pre = null;
-                if ( targetRole != null ) {
-                    pre = cb.equal( root.get( "role" ), targetRole );
-                }
-                if ( ( currentUser != null ) && ( currentUser.getRole() != UserRole.SuperAdmin ) ) {
-                    Predicate p = cb.notEqual( root.get( "role" ), UserRole.SuperAdmin );
-                    pre = ( pre == null ) ? p : cb.and( pre, p );
-                }
-                if ( !StringUtils.isEmpty( keyword ) ) {
-                    String fuzzyKeyword = "%" + keyword + "%";
-                    Predicate p = cb.like( root.<String>get( "mobile" ), fuzzyKeyword );
-                    pre = ( pre == null ) ? p : cb.and( pre, p );
-                }
-                return pre;
-            }
-        };
-    }
+      @Override
+      public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        Predicate pre = null;
+        if (targetRole != null) {
+          pre = cb.equal(root.get("role"), targetRole);
+        }
+        if ((currentUser != null) && (currentUser.getRole() != UserRole.SuperAdmin)) {
+          Predicate p = cb.notEqual(root.get("role"), UserRole.SuperAdmin);
+          pre = (pre == null) ? p : cb.and(pre, p);
+        }
+        if (!StringUtils.isEmpty(keyword)) {
+          String fuzzyKeyword = "%" + keyword + "%";
+          Predicate p = cb.like(root.<String>get("mobile"), fuzzyKeyword);
+          pre = (pre == null) ? p : cb.and(pre, p);
+        }
+        return pre;
+      }
+    };
+  }
 }

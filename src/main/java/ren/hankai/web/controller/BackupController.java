@@ -29,30 +29,28 @@ import ren.hankai.web.payload.PaginatedList;
 @Controller
 public class BackupController extends AbstractController {
 
-    @Autowired
-    private BackupService backupService;
+  @Autowired
+  private BackupService backupService;
 
-    @RequestMapping( Route.BG_DB_BACKUPS )
-    public ModelAndView showDbBackups() {
-        return new ModelAndView( "admin/db_backups" );
-    }
+  @RequestMapping(Route.BG_DB_BACKUPS)
+  public ModelAndView showDbBackups() {
+    return new ModelAndView("admin/db_backups");
+  }
 
-    @RequestMapping(
-        value = Route.BG_DB_BACKUPS_JSON,
-        produces = { "application/json; charset=utf-8" } )
-    @ResponseBody
-    public PaginatedList getDbBackupsJson() {
-        PaginatedList response = null;
-        try {
-            List<DbBackup> list = backupService.getDbBackups();
-            response = new PaginatedList();
-            response.setTotal( list.size() );
-            response.setRows( list );
-        } catch (Exception e) {
-            logger.error( "Failed to get backup list.", e );
-        } catch (Error e) {
-            logger.error( "Failed to get backup list.", e );
-        }
-        return response;
+  @RequestMapping(value = Route.BG_DB_BACKUPS_JSON, produces = {"application/json; charset=utf-8"})
+  @ResponseBody
+  public PaginatedList getDbBackupsJson() {
+    PaginatedList response = null;
+    try {
+      List<DbBackup> list = backupService.getDbBackups();
+      response = new PaginatedList();
+      response.setTotal(list.size());
+      response.setRows(list);
+    } catch (Exception e) {
+      logger.error("Failed to get backup list.", e);
+    } catch (Error e) {
+      logger.error("Failed to get backup list.", e);
     }
+    return response;
+  }
 }

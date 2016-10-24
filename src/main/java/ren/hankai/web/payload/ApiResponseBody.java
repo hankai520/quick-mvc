@@ -10,43 +10,43 @@ package ren.hankai.web.payload;
  */
 public class ApiResponseBody {
 
-    /*
-     * 业务逻辑是否成功
-     */
-    private boolean       success;
-    private BusinessError error;
-    private String        message;
-    private Object        data;
+  /*
+   * 业务逻辑是否成功
+   */
+  private boolean success;
+  private BusinessError error;
+  private String message;
+  private Object data;
 
-    public BusinessError getError() {
-        return error;
-    }
+  public BusinessError getError() {
+    return error;
+  }
 
-    public void setError( BusinessError error ) {
-        this.error = error;
-    }
+  public void setError(BusinessError error) {
+    this.error = error;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public void setMessage( String message ) {
-        this.message = message;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    public Object getData() {
-        return data;
-    }
+  public Object getData() {
+    return data;
+  }
 
-    public void setData( Object data ) {
-        this.data = data;
-    }
+  public void setData(Object data) {
+    this.data = data;
+  }
 
-    public boolean isSuccess() {
-        return success;
-    }
+  public boolean isSuccess() {
+    return success;
+  }
 
-    public void setSuccess( boolean success ) {
-        this.success = success;
-    }
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
 }

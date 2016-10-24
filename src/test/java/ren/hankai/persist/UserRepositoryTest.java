@@ -30,16 +30,15 @@ import ren.hankai.persist.model.User;
  */
 public class UserRepositoryTest extends ApplicationTests {
 
-    @Test
-    public void test() {
-        Page<User> result = userService.findAll( new Specification<User>() {
+  @Test
+  public void test() {
+    Page<User> result = userService.findAll(new Specification<User>() {
 
-            @Override
-            public Predicate toPredicate( Root<User> root, CriteriaQuery<?> query,
-                            CriteriaBuilder cb ) {
-                return cb.equal( root.get( "mobile" ), "111" );
-            }
-        }, new PageRequest( 0, 10, Direction.ASC, "mobile" ) );
-        Assert.assertTrue( ( result != null ) && ( result.getTotalElements() > 0 ) );
-    }
+      @Override
+      public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+        return cb.equal(root.get("mobile"), "111");
+      }
+    }, new PageRequest(0, 10, Direction.ASC, "mobile"));
+    Assert.assertTrue((result != null) && (result.getTotalElements() > 0));
+  }
 }
