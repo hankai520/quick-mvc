@@ -97,3 +97,12 @@ eclipse {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task copyDependencies(type: Copy) {
+   from configurations.compile
+   into "dependencies"
+}
